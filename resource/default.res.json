@@ -1,0 +1,40 @@
+{
+	"groups": [
+		{
+			"keys": "description_json,rhinoceros_injured_png,rhinoceros_tear_png,rhinoceros_png,shot_background,bullet",
+			"name": "preload"
+		}
+	],
+	"resources": [
+		{
+			"name": "description_json",
+			"type": "json",
+			"url": "config/description.json"
+		},
+		{
+			"name": "rhinoceros_injured_png",
+			"type": "image",
+			"url": "assets/rhinoceros_injured.png"
+		},
+		{
+			"name": "rhinoceros_tear_png",
+			"type": "image",
+			"url": "assets/rhinoceros_tear.png"
+		},
+		{
+			"name": "rhinoceros_png",
+			"type": "image",
+			"url": "assets/rhinoceros.png"
+		},
+		{
+			"name": "shot_background",
+			"type": "image",
+			"url": "assets/shot_background.jpg"
+		},
+		{
+			"name": "bullet",
+			"type": "image",
+			"url": "assets/bullet.jpg"
+		}
+	]
+}
