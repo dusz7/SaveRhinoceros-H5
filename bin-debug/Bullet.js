@@ -11,10 +11,9 @@ var __extends = (this && this.__extends) || function (d, b) {
  */
 var Bullet = (function (_super) {
     __extends(Bullet, _super);
-    function Bullet(texture, textureName) {
-        var _this = _super.call(this, texture) || this;
-        _this.textureName = textureName;
-        return _this;
+    function Bullet(texture) {
+        return _super.call(this, texture) || this;
+        //this.textureName = textureName;
     }
     /**生产*/
     Bullet.produce = function (textureName) {
@@ -26,8 +25,10 @@ var Bullet = (function (_super) {
             bullet = dict.pop();
         }
         else {
-            bullet = new Bullet(RES.getRes(textureName), textureName);
+            bullet = new Bullet(RES.getRes(textureName));
+            bullet.pixelHitTest = true;
         }
+        bullet.textureName = textureName;
         return bullet;
     };
     /**回收*/

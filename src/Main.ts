@@ -125,7 +125,7 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene() {
-        let background = GameUtil.createBitmapByName("shot_background");
+        let background = GameUtil.createBitmapByName("background1_png");
         this.addChild(background);
         
         this.stageW = this.stage.stageWidth;
@@ -133,7 +133,7 @@ class Main extends egret.DisplayObjectContainer {
         //background.width = stageW;
         //background.height = stageH;
 
-        this.rhinoceros = new Rhinoceros();
+        this.rhinoceros = new Rhinoceros("stepl1_png");
         this.rhinoceros.x = this.stageW/2;
         this.rhinoceros.y = this.stageH/2;
         //目标移动
@@ -155,7 +155,7 @@ class Main extends egret.DisplayObjectContainer {
     private createBulletHandler(evt:egret.Event):void{
         var bullet:Bullet;
         var theGun:Gun = evt.target;
-        bullet = Bullet.produce("bullet");
+        bullet = Bullet.produce("bullet_png");
         bullet.x = theGun.x+128;
         bullet.y = theGun.y+110;
         this.addChild(bullet);
@@ -205,7 +205,10 @@ class Main extends egret.DisplayObjectContainer {
         for(i=0;i<theBulletsCount;i++) {
             bullet = this.theBullets[i];
             if(GameUtil.hitTest(this.rhinoceros,bullet)) {
-                this.rhinoceros.blood -= 1;
+
+                this.rhinoceros.reduceBlood();
+                console.log(this.rhinoceros.blood);
+
                 if(delBullets.indexOf(bullet)==-1)
                     delBullets.push(bullet);
             }

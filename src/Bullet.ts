@@ -16,14 +16,16 @@
             if(dict.length>0) {
                 bullet = dict.pop();
             } else {
-                bullet = new Bullet(RES.getRes(textureName),textureName);
+                bullet = new Bullet(RES.getRes(textureName));
+                bullet.pixelHitTest = true;
             }
+            bullet.textureName = textureName;
             return bullet;
         }
         /**回收*/
         public static reclaim(bullet:Bullet):void
         {
-             var textureName: string = bullet.textureName;
+            var textureName: string = bullet.textureName;
             if(Bullet.cacheDict[textureName]==null)
                 Bullet.cacheDict[textureName] = [];
             var dict:Bullet[] = Bullet.cacheDict[textureName];
@@ -33,8 +35,8 @@
 
         private textureName:string;//可视为子弹类型名
 
-        public constructor(texture:egret.Texture,textureName: string) {
+        public constructor(texture:egret.Texture) {
             super(texture);
-            this.textureName = textureName;
+            //this.textureName = textureName;
 		}
     }

@@ -112,13 +112,13 @@ var Main = (function (_super) {
      * Create a game scene
      */
     Main.prototype.createGameScene = function () {
-        var background = GameUtil.createBitmapByName("shot_background");
+        var background = GameUtil.createBitmapByName("background1_png");
         this.addChild(background);
         this.stageW = this.stage.stageWidth;
         this.stageH = this.stage.stageHeight;
         //background.width = stageW;
         //background.height = stageH;
-        this.rhinoceros = new Rhinoceros();
+        this.rhinoceros = new Rhinoceros("stepl1_png");
         this.rhinoceros.x = this.stageW / 2;
         this.rhinoceros.y = this.stageH / 2;
         //目标移动
@@ -137,7 +137,7 @@ var Main = (function (_super) {
     Main.prototype.createBulletHandler = function (evt) {
         var bullet;
         var theGun = evt.target;
-        bullet = Bullet.produce("bullet");
+        bullet = Bullet.produce("bullet_png");
         bullet.x = theGun.x + 128;
         bullet.y = theGun.y + 110;
         this.addChild(bullet);
@@ -182,7 +182,8 @@ var Main = (function (_super) {
         for (i = 0; i < theBulletsCount; i++) {
             bullet = this.theBullets[i];
             if (GameUtil.hitTest(this.rhinoceros, bullet)) {
-                this.rhinoceros.blood -= 1;
+                this.rhinoceros.reduceBlood();
+                console.log(this.rhinoceros.blood);
                 if (delBullets.indexOf(bullet) == -1)
                     delBullets.push(bullet);
             }

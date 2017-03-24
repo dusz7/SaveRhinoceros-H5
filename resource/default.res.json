@@ -1,40 +1,115 @@
 {
-	"groups": [
-		{
-			"keys": "description_json,rhinoceros_injured_png,rhinoceros_tear_png,rhinoceros_png,shot_background,bullet",
-			"name": "preload"
-		}
-	],
 	"resources": [
 		{
-			"name": "description_json",
-			"type": "json",
-			"url": "config/description.json"
+			"name": "background1_png",
+			"type": "image",
+			"url": "assets/background1.png"
 		},
 		{
-			"name": "rhinoceros_injured_png",
+			"name": "background3_png",
 			"type": "image",
-			"url": "assets/rhinoceros_injured.png"
+			"url": "assets/background3.png"
 		},
 		{
-			"name": "rhinoceros_tear_png",
+			"name": "background4_png",
 			"type": "image",
-			"url": "assets/rhinoceros_tear.png"
+			"url": "assets/background4.png"
 		},
 		{
-			"name": "rhinoceros_png",
+			"name": "background5_png",
 			"type": "image",
-			"url": "assets/rhinoceros.png"
+			"url": "assets/background5.png"
 		},
 		{
-			"name": "shot_background",
+			"name": "blood_png",
 			"type": "image",
-			"url": "assets/shot_background.jpg"
+			"url": "assets/blood.png"
 		},
 		{
-			"name": "bullet",
+			"name": "bullet_png",
 			"type": "image",
-			"url": "assets/bullet.jpg"
+			"url": "assets/bullet.png"
+		},
+		{
+			"name": "hit_png",
+			"type": "image",
+			"url": "assets/hit.png"
+		},
+		{
+			"name": "plant1_png",
+			"type": "image",
+			"url": "assets/plant1.png"
+		},
+		{
+			"name": "plant2_png",
+			"type": "image",
+			"url": "assets/plant2.png"
+		},
+		{
+			"name": "plant3_png",
+			"type": "image",
+			"url": "assets/plant3.png"
+		},
+		{
+			"name": "plant4_png",
+			"type": "image",
+			"url": "assets/plant4.png"
+		},
+		{
+			"name": "plant5_png",
+			"type": "image",
+			"url": "assets/plant5.png"
+		},
+		{
+			"name": "stepl1_png",
+			"type": "image",
+			"url": "assets/stepl1.png"
+		},
+		{
+			"name": "stepl2_png",
+			"type": "image",
+			"url": "assets/stepl2.png"
+		},
+		{
+			"name": "stepl3_png",
+			"type": "image",
+			"url": "assets/stepl3.png"
+		},
+		{
+			"name": "stepl4_png",
+			"type": "image",
+			"url": "assets/stepl4.png"
+		},
+		{
+			"name": "stepr1_png",
+			"type": "image",
+			"url": "assets/stepr1.png"
+		},
+		{
+			"name": "stepr2_png",
+			"type": "image",
+			"url": "assets/stepr2.png"
+		},
+		{
+			"name": "stepr4_png",
+			"type": "image",
+			"url": "assets/stepr4.png"
+		},
+		{
+			"name": "stepr3_png",
+			"type": "image",
+			"url": "assets/stepr3.png"
+		},
+		{
+			"name": "background2_png",
+			"type": "image",
+			"url": "assets/background2.png"
+		}
+	],
+	"groups": [
+		{
+			"name": "preload",
+			"keys": "background1_png,background3_png,background4_png,background5_png,blood_png,bullet_png,hit_png,plant1_png,plant2_png,plant3_png,plant4_png,plant5_png,stepl1_png,stepl2_png,stepl3_png,stepl4_png,stepr1_png,stepr2_png,stepr4_png,stepr3_png,background2_png"
 		}
 	]
 }
