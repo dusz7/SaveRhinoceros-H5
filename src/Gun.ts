@@ -2,21 +2,17 @@ class Gun extends egret.DisplayObjectContainer{
     
     private bmp:egret.Bitmap;
     private fireDelay:number;
-
+    private fireAngle:number;
     //private fireTimer:egret.Timer;
 
-    public constructor(x:number,y:number,width:number,height:number){
+    public constructor(x:number,y:number,angle:number){
         super();
-        this.bmp = GameUtil.createBitmapByName("gun");
-        this.bmp.width = width;
-        this.bmp.height = height;
-        this.bmp.x = x;
-        this.bmp.y = y;
-
-        this.addChild(this.bmp);
+        this.x = x;
+        this.y = y;
+        this.fireAngle = angle;
     }
 
     public fire():void{
-        this.dispatchEventWith("createBullet");
+        this.dispatchEventWith("createBullet",false,this.fireAngle);
     }
 }

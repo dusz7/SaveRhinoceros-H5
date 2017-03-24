@@ -104,12 +104,43 @@
 			"name": "background2_png",
 			"type": "image",
 			"url": "assets/background2.png"
+		},
+		{
+			"name": "endtitle_png",
+			"type": "image",
+			"url": "assets/endtitle.png"
+		},
+		{
+			"name": "startbutton_png",
+			"type": "image",
+			"url": "assets/startbutton.png"
+		},
+		{
+			"name": "startbuttond_png",
+			"type": "image",
+			"url": "assets/startbuttond.png"
 		}
 	],
 	"groups": [
 		{
 			"name": "preload",
-			"keys": "background1_png,background3_png,background4_png,background5_png,blood_png,bullet_png,hit_png,plant1_png,plant2_png,plant3_png,plant4_png,plant5_png,stepl1_png,stepl2_png,stepl3_png,stepl4_png,stepr1_png,stepr2_png,stepr4_png,stepr3_png,background2_png"
+			"keys": "background1_png,background3_png,background4_png,background5_png,blood_png,bullet_png,hit_png,plant1_png,plant2_png,plant3_png,plant4_png,plant5_png,stepl1_png,stepl2_png,stepl3_png,stepl4_png,stepr1_png,stepr2_png,stepr4_png,stepr3_png,background2_png,endtitle_png,startbutton_png,startbuttond_png"
+		},
+		{
+			"name": "myPreload",
+			"keys": "background1_png,plant1_png,startbutton_png,startbuttond_png,stepl1_png,stepr1_png,bullet_png,hit_png"
+		},
+		{
+			"name": "secondStep",
+			"keys": "background2_png,stepl2_png,stepr2_png,plant2_png"
+		},
+		{
+			"name": "otherSteps",
+			"keys": "background3_png,background4_png,plant3_png,plant4_png,stepl3_png,stepr3_png,stepl4_png,stepr4_png"
+		},
+		{
+			"name": "gameEnd",
+			"keys": "background5_png,plant5_png,blood_png,endtitle_png"
 		}
 	]
 }

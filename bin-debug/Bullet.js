@@ -11,12 +11,20 @@ var __extends = (this && this.__extends) || function (d, b) {
  */
 var Bullet = (function (_super) {
     __extends(Bullet, _super);
-    function Bullet(texture) {
-        return _super.call(this, texture) || this;
+    function Bullet(texture, angle) {
+        var _this = _super.call(this, texture) || this;
         //this.textureName = textureName;
+        _this.fireAngle = angle;
+        _this.anchorOffsetX = _this.width / 2;
+        _this.anchorOffsetY = _this.height / 2;
+        _this.rotation = angle;
+        _this.anchorOffsetX = _this.width;
+        return _this;
     }
-    /**生产*/
-    Bullet.produce = function (textureName) {
+    /**
+     * 生产
+     */
+    Bullet.produce = function (textureName, angle) {
         if (Bullet.cacheDict[textureName] == null)
             Bullet.cacheDict[textureName] = [];
         var dict = Bullet.cacheDict[textureName];
@@ -25,13 +33,17 @@ var Bullet = (function (_super) {
             bullet = dict.pop();
         }
         else {
-            bullet = new Bullet(RES.getRes(textureName));
+            bullet = new Bullet(RES.getRes(textureName), angle);
             bullet.pixelHitTest = true;
         }
         bullet.textureName = textureName;
+        bullet.fireAngle = angle;
+        bullet.rotation = angle;
         return bullet;
     };
-    /**回收*/
+    /**
+     * 回收
+     */
     Bullet.reclaim = function (bullet) {
         var textureName = bullet.textureName;
         if (Bullet.cacheDict[textureName] == null)

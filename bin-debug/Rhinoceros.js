@@ -10,36 +10,35 @@ var Rhinoceros = (function (_super) {
     __extends(Rhinoceros, _super);
     function Rhinoceros(textureName) {
         var _this = _super.call(this) || this;
-        _this.blood = 3;
+        //public blood:number = 3;
+        _this.hitNum = 0;
         _this.textureName = textureName;
         _this.bmp = GameUtil.createBitmapByName(textureName);
         _this.bmp.pixelHitTest = true;
         _this.addChild(_this.bmp);
-        _this.hitBlood = GameUtil.createBitmapByName("hit_png");
-        _this.hitBlood.anchorOffsetX = _this.hitBlood.width / 2;
-        _this.hitBlood.anchorOffsetY = _this.hitBlood.height / 2;
-        _this.hitBlood.x = _this.width / 2.5;
-        _this.hitBlood.y = _this.height / 1.7;
+        _this.hitPerformance = GameUtil.createBitmapByName("hit_png");
+        _this.hitPerformance.anchorOffsetX = _this.hitPerformance.width / 2;
+        _this.hitPerformance.anchorOffsetY = _this.hitPerformance.height / 2;
+        _this.hitPerformance.x = _this.width / 2.5;
+        _this.hitPerformance.y = _this.height / 1.7;
+        _this.anchorOffsetX = _this.width / 2;
+        _this.anchorOffsetY = _this.height / 2;
+        _this.isLeft = true;
         return _this;
     }
-    Rhinoceros.prototype.reduceBlood = function () {
-        this.blood -= 1;
-        if (this.blood == 2) {
-            this.removeChild(this.bmp);
-            this.bmp = GameUtil.createBitmapByName("stepl2_png");
-            this.bmp.pixelHitTest = true;
-            this.addChild(this.bmp);
-            this.addChild(this.hitBlood);
+    Rhinoceros.prototype.hurt = function () {
+        this.hitNum += 1;
+        if (this.hitNum <= 3) {
+            this.addChild(this.hitPerformance);
             egret.setTimeout(function () {
-                this.removeChild(this.hitBlood);
-            }, this, 400);
+                this.removeChild(this.hitPerformance);
+            }, this, 300);
+            this.dispatchEventWith("changeStep", false, this.hitNum);
         }
-        else if (this.blood == 1) {
-            this.bmp = GameUtil.createBitmapByName("stepl3_png");
-        }
-        else if (this.blood == 0) {
-            this.bmp = GameUtil.createBitmapByName("stepl4_png");
-        }
+    };
+    Rhinoceros.prototype.turn = function () {
+        this.isLeft = !this.isLeft;
+        this.dispatchEventWith("turnTo");
     };
     return Rhinoceros;
 }(egret.DisplayObjectContainer));

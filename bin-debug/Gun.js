@@ -9,18 +9,15 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Gun = (function (_super) {
     __extends(Gun, _super);
     //private fireTimer:egret.Timer;
-    function Gun(x, y, width, height) {
+    function Gun(x, y, angle) {
         var _this = _super.call(this) || this;
-        _this.bmp = GameUtil.createBitmapByName("gun");
-        _this.bmp.width = width;
-        _this.bmp.height = height;
-        _this.bmp.x = x;
-        _this.bmp.y = y;
-        _this.addChild(_this.bmp);
+        _this.x = x;
+        _this.y = y;
+        _this.fireAngle = angle;
         return _this;
     }
     Gun.prototype.fire = function () {
-        this.dispatchEventWith("createBullet");
+        this.dispatchEventWith("createBullet", false, this.fireAngle);
     };
     return Gun;
 }(egret.DisplayObjectContainer));

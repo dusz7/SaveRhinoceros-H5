@@ -24,10 +24,10 @@ var GameUtil = (function () {
         rect2.y = obj2.y;
         //return rect1.intersects(rect2);
         if (obj1.hitTestPoint((rect2.left + rect2.width / 2), (rect2.height / 2 + rect2.top), true)) {
-            console.log("hit it");
-            console.log(rect2.x + "," + rect2.y);
-            console.log((rect2.x + rect2.width / 2) + "," + (rect2.height / 2 + rect2.top));
-            console.log(obj1.y);
+            //console.log("hit it");
+            //console.log(rect2.x+","+rect2.y);
+            //console.log((rect2.x+rect2.width/2)+","+(rect2.height/2+rect2.top));
+            //console.log(obj1.y);
             return true;
         }
         /*

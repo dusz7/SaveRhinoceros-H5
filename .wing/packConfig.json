@@ -1,0 +1,9 @@
+{
+    "useClip": false,
+    "maxImageWidth": 1024,
+    "maxImageHeight": 1024,
+    "defaultResPath": "/Users/dusz7/Code/EgretProjects/SaveRhinoceros/resource/default.res.json",
+    "packGroups": {
+        "preload": true
+    }
+}
