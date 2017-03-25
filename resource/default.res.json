@@ -1,26 +1,6 @@
 {
 	"resources": [
 		{
-			"name": "background1_png",
-			"type": "image",
-			"url": "assets/background1.png"
-		},
-		{
-			"name": "background3_png",
-			"type": "image",
-			"url": "assets/background3.png"
-		},
-		{
-			"name": "background4_png",
-			"type": "image",
-			"url": "assets/background4.png"
-		},
-		{
-			"name": "background5_png",
-			"type": "image",
-			"url": "assets/background5.png"
-		},
-		{
 			"name": "blood_png",
 			"type": "image",
 			"url": "assets/blood.png"
@@ -34,6 +14,11 @@
 			"name": "hit_png",
 			"type": "image",
 			"url": "assets/hit.png"
+		},
+		{
+			"name": "plant0_png",
+			"type": "image",
+			"url": "assets/plant0.png"
 		},
 		{
 			"name": "plant1_png",
@@ -56,56 +41,6 @@
 			"url": "assets/plant4.png"
 		},
 		{
-			"name": "plant5_png",
-			"type": "image",
-			"url": "assets/plant5.png"
-		},
-		{
-			"name": "stepl1_png",
-			"type": "image",
-			"url": "assets/stepl1.png"
-		},
-		{
-			"name": "stepl2_png",
-			"type": "image",
-			"url": "assets/stepl2.png"
-		},
-		{
-			"name": "stepl3_png",
-			"type": "image",
-			"url": "assets/stepl3.png"
-		},
-		{
-			"name": "stepl4_png",
-			"type": "image",
-			"url": "assets/stepl4.png"
-		},
-		{
-			"name": "stepr1_png",
-			"type": "image",
-			"url": "assets/stepr1.png"
-		},
-		{
-			"name": "stepr2_png",
-			"type": "image",
-			"url": "assets/stepr2.png"
-		},
-		{
-			"name": "stepr4_png",
-			"type": "image",
-			"url": "assets/stepr4.png"
-		},
-		{
-			"name": "stepr3_png",
-			"type": "image",
-			"url": "assets/stepr3.png"
-		},
-		{
-			"name": "background2_png",
-			"type": "image",
-			"url": "assets/background2.png"
-		},
-		{
 			"name": "endtitle_png",
 			"type": "image",
 			"url": "assets/endtitle.png"
@@ -119,28 +54,54 @@
 			"name": "startbuttond_png",
 			"type": "image",
 			"url": "assets/startbuttond.png"
+		},
+		{
+			"name": "step0_png",
+			"type": "image",
+			"url": "assets/step0.png"
+		},
+		{
+			"name": "step1_png",
+			"type": "image",
+			"url": "assets/step1.png"
+		},
+		{
+			"name": "step2_png",
+			"type": "image",
+			"url": "assets/step2.png"
+		},
+		{
+			"name": "step3_png",
+			"type": "image",
+			"url": "assets/step3.png"
+		},
+		{
+			"name": "background_end_png",
+			"type": "image",
+			"url": "assets/background_end.png"
+		},
+		{
+			"name": "background_start_png",
+			"type": "image",
+			"url": "assets/background_start.png"
 		}
 	],
 	"groups": [
 		{
 			"name": "preload",
-			"keys": "background1_png,background3_png,background4_png,background5_png,blood_png,bullet_png,hit_png,plant1_png,plant2_png,plant3_png,plant4_png,plant5_png,stepl1_png,stepl2_png,stepl3_png,stepl4_png,stepr1_png,stepr2_png,stepr4_png,stepr3_png,background2_png,endtitle_png,startbutton_png,startbuttond_png"
+			"keys": "blood_png,bullet_png,hit_png,plant1_png,plant2_png,plant3_png,plant4_png,endtitle_png,startbutton_png,startbuttond_png,step1_png,step2_png,step3_png,background_end_png,background_start_png,step0_png,plant0_png"
 		},
 		{
 			"name": "myPreload",
-			"keys": "background1_png,plant1_png,startbutton_png,startbuttond_png,stepl1_png,stepr1_png,bullet_png,hit_png"
-		},
-		{
-			"name": "secondStep",
-			"keys": "background2_png,stepl2_png,stepr2_png,plant2_png"
+			"keys": "background_start_png,plant0_png,plant1_png,plant2_png,step0_png,step1_png,startbutton_png,startbuttond_png,bullet_png,hit_png"
 		},
 		{
 			"name": "otherSteps",
-			"keys": "background3_png,background4_png,plant3_png,plant4_png,stepl3_png,stepr3_png,stepl4_png,stepr4_png"
+			"keys": "plant3_png,step2_png,step3_png,plant4_png,background_end_png"
 		},
 		{
 			"name": "gameEnd",
-			"keys": "background5_png,plant5_png,blood_png,endtitle_png"
+			"keys": "blood_png,endtitle_png"
 		}
 	]
 }

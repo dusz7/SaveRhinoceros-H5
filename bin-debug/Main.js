@@ -72,13 +72,9 @@ var Main = (function (_super) {
             this.stage.removeChild(this.loadingView);
             RES.removeEventListener(RES.ResourceEvent.GROUP_PROGRESS, this.onResourceProgress, this);
             console.log("myPreload completed!");
-            RES.loadGroup("secondStep");
+            RES.loadGroup("otherSteps");
             var gameController = new GameController();
             this.addChild(gameController);
-        }
-        else if (event.groupName == "secondStep") {
-            console.log("secondStep completed!");
-            RES.loadGroup("otherSteps");
         }
         else if (event.groupName == "otherSteps") {
             console.log("otherSteps completed!");

@@ -12,7 +12,14 @@ var GameController = (function (_super) {
         var _this = _super.call(this) || this;
         _this._touchStatus = false; //当前触摸状态，按下时，值为true
         _this._distance = new egret.Point(); //鼠标点击时，鼠标全局坐标与_bird的位置差
-        _this.theBullets = [];
+        _this.pauseTimeOut = 400;
+        _this.passNum = 0;
+        _this.theGunsList = [];
+        _this.theBulletsList = [];
+        _this.initFireDelay = 2000;
+        //在此规定该移动时间为移动场景高度的时间
+        _this.initBulletSpeedTime = 4000;
+        _this.isGaming = false;
         _this.addEventListener(egret.Event.ADDED_TO_STAGE, _this.onAddToStage, _this);
         return _this;
     }
@@ -25,25 +32,46 @@ var GameController = (function (_super) {
      * Create a game scene
      */
     GameController.prototype.createGameScene = function () {
+        this.isGaming = true;
+        this.passNum = 0;
+        this.theGunsList = [];
+        this.theBulletsList = [];
         this.stageW = this.stage.stageWidth;
         this.stageH = this.stage.stageHeight;
-        this.background = GameUtil.createBitmapByName("background1_png");
+        this.background = GameUtil.createBitmapByName("background_start_png");
         this.addChild(this.background);
         this.startBtn = GameUtil.createBitmapByName("startbutton_png"); //开始按钮
-        this.startBtn.x = (this.stageW - this.startBtn.width) / 2; //居中定位
-        this.startBtn.y = (this.stageH - this.startBtn.height) / 2; //居中定位
+        this.startBtn.anchorOffsetX = this.startBtn.width / 2;
+        this.startBtn.anchorOffsetY = this.startBtn.height / 2;
+        this.startBtn.x = this.stageW / 2; //居中定位
+        this.startBtn.y = this.stageH / 2; //居中定位
         this.startBtn.touchEnabled = true; //开启触碰
-        this.startBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.gameStart, this); //点击按钮开始游戏
+        this.startBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.buttonClick, this); //点击按钮开始游戏
         this.addChild(this.startBtn);
-        this.plant = GameUtil.createBitmapByName("plant1_png");
+        this.plant = GameUtil.createBitmapByName("plant0_png");
         this.addChildAt(this.plant, -1);
+    };
+    /**
+     * 按钮点击效果
+     */
+    GameController.prototype.buttonClick = function () {
+        if (!this.isGaming) {
+            this.removeChild(this.resultShow);
+            this.removeChild(this.resultText);
+        }
+        this.startBtn.removeEventListener(egret.TouchEvent.TOUCH_TAP, this.buttonClick, this);
+        this.startBtn.texture = RES.getRes("startbuttond_png");
+        egret.setTimeout(function () {
+            this.removeChild(this.startBtn);
+            this.gameStart();
+        }, this, 0.5 * this.pauseTimeOut);
     };
     /**
      * 开始游戏
      */
     GameController.prototype.gameStart = function () {
-        this.removeChild(this.startBtn);
-        this.rhinoceros = new Rhinoceros("stepl1_png");
+        this.isGaming = true;
+        this.rhinoceros = new Rhinoceros("step0_png");
         this.rhinoceros.x = this.stageW / 2;
         this.rhinoceros.y = this.stageH / 2;
         this.rhinoceros.addEventListener("changeStep", this.changeStepHandler, this);
@@ -55,56 +83,117 @@ var GameController = (function (_super) {
         this.addChildAt(this.rhinoceros, this.numChildren - 1);
         //检测子弹是否击中
         this.addEventListener(egret.Event.ENTER_FRAME, this.gameHitTest, this);
-        var gun1 = new Gun(0, 250, 50);
-        var gun2 = new Gun(110, 170, 80);
-        var gun3 = new Gun(275, 30, 80);
-        gun1.addEventListener("createBullet", this.createBulletHandler, this);
-        gun2.addEventListener("createBullet", this.createBulletHandler, this);
-        gun3.addEventListener("createBullet", this.createBulletHandler, this);
-        gun1.fire();
-        gun2.fire();
-        gun3.fire();
+        var i;
+        var newGun;
+        var gunsjsons = [
+            { "x": 0, "y": 250, "fireAngle": 50 },
+            { "x": 110, "y": 170, "fireAngle": 80 },
+            { "x": 275, "y": 30, "fireAngle": 80 },
+            { "x": 510, "y": 90, "fireAngle": 60 },
+            { "x": 710, "y": 115, "fireAngle": 120 },
+            { "x": 930, "y": 85, "fireAngle": 100 },
+            { "x": 1215, "y": 120, "fireAngle": 95 },
+            { "x": 1370, "y": 85, "fireAngle": 70 },
+            { "x": 1565, "y": 70, "fireAngle": 120 },
+            { "x": 1700, "y": 90, "fireAngle": 100 },
+            { "x": 1920, "y": 135, "fireAngle": 145 },
+            { "x": 0, "y": 900, "fireAngle": -50 },
+            { "x": 210, "y": 1020, "fireAngle": -80 },
+            { "x": 405, "y": 1040, "fireAngle": -90 },
+            { "x": 665, "y": 1000, "fireAngle": -100 },
+            { "x": 870, "y": 990, "fireAngle": -110 },
+            { "x": 1080, "y": 990, "fireAngle": -100 },
+            { "x": 1280, "y": 985, "fireAngle": -95 },
+            { "x": 1480, "y": 975, "fireAngle": -95 },
+            { "x": 1630, "y": 1005, "fireAngle": -95 },
+            { "x": 1770, "y": 960, "fireAngle": -125 },
+            { "x": 1920, "y": 855, "fireAngle": -160 }
+        ];
+        for (i = 0; i < gunsjsons.length; i++) {
+            newGun = new Gun(gunsjsons[i].x, gunsjsons[i].y, gunsjsons[i].fireAngle);
+            newGun.addEventListener("createBullet", this.createBulletHandler, this);
+            this.theGunsList.push(newGun);
+        }
+        //子弹发射控制逻辑
+        this.myFireController = new FireController(this.theGunsList);
+        this.myFireController.startFire(this.initFireDelay, this.initBulletSpeedTime);
     };
     /**
      * 游戏结束
      */
     GameController.prototype.gameStop = function () {
-        //console.log("the game is end!");
-        this.removeEventListener(egret.Event.ENTER_FRAME, this.gameViewUpdate, this);
-        //枪停止射击
-        //移除制造子弹的监听事件
+        /**
+         * 移除各项监听事件，删除所有对象
+         */
+        this.removeEventListener(egret.Event.ENTER_FRAME, this.gameHitTest, this);
         //移除犀牛的监听事件
-        //清理子弹等
-        this.background.texture = RES.getRes("background5_png");
-        this.plant.texture = RES.getRes("plant5_png");
-        this.removeChild(this.rhinoceros);
+        this.rhinoceros.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.mouseDown, this);
+        this.rhinoceros.removeEventListener(egret.TouchEvent.TOUCH_END, this.mouseUp, this);
+        this.rhinoceros.removeEventListener("changeStep", this.changeStepHandler, this);
+        this.rhinoceros.removeEventListener("turnTo", this.turnToHandler, this);
+        //需要停止射击吗？
+        this.myFireController.stopFire();
+        //移除枪支射击的制造子弹的监听事件
+        var i;
+        for (i = 0; i < this.theGunsList.length; i++) {
+            var theGun = this.theGunsList[i];
+            theGun.removeEventListener("createBullet", this.createBulletHandler, this);
+        }
+        this.theGunsList = [];
+        //清除子弹
+        //清除所有动画效果
+        egret.Tween.removeAllTweens();
+        egret.setTimeout(function () {
+            var i;
+            for (i = 0; i < this.theBulletsList.length; i++) {
+                var theBullet = this.theBulletsList[i];
+                this.removeChild(theBullet);
+                //this.theBulletsList.splice(this.theBulletsList.indexOf(theBullet),1);
+                Bullet.reclaim(theBullet);
+            }
+            this.theBulletsList = [];
+            this.removeChild(this.rhinoceros);
+            this.gameEndUILoad();
+        }, this, this.pauseTimeOut);
+    };
+    /**
+     * 游戏结束的结果UI绘制
+     */
+    GameController.prototype.gameEndUILoad = function () {
+        this.background.texture = RES.getRes("background_end_png");
+        this.plant.texture = RES.getRes("plant4_png");
         var blood = GameUtil.createBitmapByName("blood_png");
         this.addChild(blood);
-    };
-    /**游戏画面更新*/
-    GameController.prototype.gameViewUpdate = function (evt) {
-        //回收子弹
-        //var fireSpeed:number = 1;
-        /*
-        var i:number = 0;
-        var bullet:Bullet;
-        var myBulletsCount:number = this.theBullets.length;
-        var delArr:any[] = [];
-        for(;i<myBulletsCount;i++) {
-            bullet = this.theBullets[i];
-            //bullet.x += fireSpeed*(Math.cos(bullet.fireAngle/180*Math.PI));
-            //bullet.y += fireSpeed*(Math.sin(bullet.fireAngle/180*Math.PI));
-            if(bullet.y > this.stageH || bullet.y < 0 || bullet.x < 0 || bullet.x > this.stageW)
-                delArr.push(bullet);
-        }
-        for(i=0;i<delArr.length;i++) {//回收不显示的子弹
-            bullet = delArr[i];
-            this.removeChild(bullet);
-            Bullet.reclaim(bullet);
-            this.theBullets.splice(this.theBullets.indexOf(bullet),1);
-        }
-        */
-        //this.gameHitTest();
+        egret.setTimeout(function () {
+            this.removeChild(blood);
+            this.resultShow = GameUtil.createBitmapByName("endtitle_png");
+            this.resultShow.anchorOffsetX = this.resultShow.width / 2;
+            this.resultShow.anchorOffsetY = this.resultShow.height / 2;
+            this.resultShow.x = this.stageW / 2;
+            this.resultShow.y = this.stageH / 2;
+            this.background.texture = RES.getRes("background_start_png");
+            this.plant.texture = RES.getRes("plant0_png");
+            this.addChild(this.resultShow);
+            //显示分数
+            this.resultText = new egret.TextField();
+            this.resultText.text = this.passNum.toString();
+            this.resultText.bold = true;
+            this.resultText.size = 150;
+            this.resultText.textColor = 0xc73320;
+            this.resultText.anchorOffsetX = this.resultText.width / 2;
+            this.resultText.anchorOffsetX = this.resultText.height / 2;
+            //放置分数
+            this.resultText.x = 1255;
+            this.resultText.y = 600;
+            this.addChild(this.resultText);
+            this.isGaming = false;
+            this.startBtn.texture = RES.getRes("startbutton_png"); //开始按钮
+            this.startBtn.x = this.stageW / 2; //居中定位
+            this.startBtn.y = this.stageH / 4 * 3; //居中定位
+            this.startBtn.touchEnabled = true; //开启触碰
+            this.startBtn.addEventListener(egret.TouchEvent.TOUCH_TAP, this.buttonClick, this); //点击按钮开始游戏
+            this.addChild(this.startBtn);
+        }, this, 3 * this.pauseTimeOut);
     };
     /**
      * 以下为各种自定义事件监听
@@ -113,27 +202,28 @@ var GameController = (function (_super) {
      * 游戏碰撞检测以及子弹击中的结果
      */
     GameController.prototype.gameHitTest = function (evt) {
-        var i, j;
-        var bullet;
-        var theGun;
-        var theBulletsCount = this.theBullets.length;
-        //将需消失的子弹记录
-        var delBullets = [];
-        //敌人的子弹可以减我血
+        var i;
+        var theBullet;
+        var theBulletsCount = this.theBulletsList.length;
+        var delBullets = []; //记录需要消失的子弹
+        //被子弹打中以后，受到伤害
         for (i = 0; i < theBulletsCount; i++) {
-            bullet = this.theBullets[i];
-            if (this.rhinoceros.hitTestPoint(bullet.x, bullet.y, true)) {
+            theBullet = this.theBulletsList[i];
+            if (this.rhinoceros.hitTestPoint(theBullet.x, theBullet.y, true)) {
                 this.rhinoceros.hurt();
-                if (delBullets.indexOf(bullet) == -1)
-                    delBullets.push(bullet);
+                if (delBullets.indexOf(theBullet) == -1)
+                    delBullets.push(theBullet);
             }
         }
+        //打中的子弹需要消失
         while (delBullets.length > 0) {
-            bullet = delBullets.pop();
-            this.removeChild(bullet);
-            this.theBullets.splice(this.theBullets.indexOf(bullet), 1);
-            Bullet.reclaim(bullet);
+            theBullet = delBullets.pop();
+            egret.Tween.removeTweens(theBullet);
+            this.removeChild(theBullet);
+            this.theBulletsList.splice(this.theBulletsList.indexOf(theBullet), 1);
+            Bullet.reclaim(theBullet);
         }
+        //达到伤害上限值，游戏结束
         if (this.rhinoceros.hitNum >= 3) {
             this.gameStop();
         }
@@ -144,14 +234,28 @@ var GameController = (function (_super) {
     GameController.prototype.createBulletHandler = function (evt) {
         var theGun = evt.target;
         var newBullet;
-        newBullet = Bullet.produce("bullet_png", evt.data);
+        newBullet = Bullet.produce("bullet_png", evt.data.angle);
         newBullet.x = theGun.x;
         newBullet.y = theGun.y;
         this.addChildAt(newBullet, this.numChildren - 1);
+        this.theBulletsList.push(newBullet);
         //设置子弹运动动画
-        var fireSpeedTime = 10000;
-        var fireDistance = 1.4 * this.stageW;
-        this.theBullets.push(newBullet);
+        //var newX:number = newBullet.x+(this.stageH/(Math.tan(Math.abs(newBullet.fireAngle))));
+        var fireDistance = this.stageH / (Math.sin(Math.abs(newBullet.fireAngle) / 180 * Math.PI));
+        var fireSpeedTime = evt.data.speedTime / (Math.sin(Math.abs(newBullet.fireAngle) / 180 * Math.PI));
+        /*
+        if(newX < 0)
+        {
+            let rate:number = newBullet.x*Math.tan(Math.PI-(Math.abs(newBullet.fireAngle)/180*Math.PI))/this.stageH;
+            fireDistance *= rate;
+            fireSpeedTime *= rate;
+        }else if(newX > this.stageW)
+        {
+            let rate:number = newBullet.x*Math.tan(Math.abs(newBullet.fireAngle)/180*Math.PI)/this.stageH;
+            fireDistance *= rate;
+            fireSpeedTime *= rate;
+        }
+        */
         egret.Tween.get(newBullet)
             .to({ x: newBullet.x + fireDistance * (Math.cos(newBullet.fireAngle / 180 * Math.PI)), y: newBullet.y + fireDistance * (Math.sin(newBullet.fireAngle / 180 * Math.PI)) }, fireSpeedTime)
             .call(this.onBulletMoveCompleted, this, [newBullet]);
@@ -160,9 +264,12 @@ var GameController = (function (_super) {
      * 子弹移动结束后
      */
     GameController.prototype.onBulletMoveCompleted = function (theBullet) {
+        egret.Tween.removeTweens(theBullet);
         this.removeChild(theBullet);
+        this.theBulletsList.splice(this.theBulletsList.indexOf(theBullet), 1);
         Bullet.reclaim(theBullet);
-        this.theBullets.splice(this.theBullets.indexOf(theBullet), 1);
+        this.passNum++;
+        //console.log("the bullet is at: "+theBullet.x+","+theBullet.y);
     };
     /**
      * 掉血时的场景变化
@@ -172,35 +279,31 @@ var GameController = (function (_super) {
         this.rhinoceros.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.mouseDown, this);
         this.rhinoceros.removeEventListener(egret.TouchEvent.TOUCH_END, this.mouseUp, this);
         var i;
-        for (i = 0; i < this.theBullets.length; i++) {
-            egret.Tween.pauseTweens(this.theBullets[i]);
+        for (i = 0; i < this.theBulletsList.length; i++) {
+            egret.Tween.pauseTweens(this.theBulletsList[i]);
         }
-        theRhi.addChild(theRhi.hitPerformance);
         if (evt.data <= 3) {
+            theRhi.addChild(theRhi.hitPerformance);
             var rhiTexture = "step";
-            var bgTexture = "background";
+            //let bgTexture:string = "background";
             var plTexture = "plant";
-            if (theRhi.isLeft == true)
-                rhiTexture += "l";
-            else
-                rhiTexture += "l";
-            var numS = (evt.data + 1).toString();
+            var numS = (evt.data).toString();
             rhiTexture += (numS + "_png");
-            bgTexture += (numS + "_png");
+            //bgTexture +=  (numS + "_png");
             plTexture += (numS + "_png");
             //console.log(rhiTexture);
-            this.background.texture = RES.getRes(bgTexture);
+            //this.background.texture = RES.getRes(bgTexture);
             this.plant.texture = RES.getRes(plTexture);
             theRhi.bmp.texture = RES.getRes(rhiTexture);
+            egret.setTimeout(function () {
+                theRhi.removeChild(theRhi.hitPerformance);
+                for (i = 0; i < this.theBulletsList.length; i++) {
+                    egret.Tween.resumeTweens(this.theBulletsList[i]);
+                }
+                this.rhinoceros.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.mouseDown, this);
+                this.rhinoceros.addEventListener(egret.TouchEvent.TOUCH_END, this.mouseUp, this);
+            }, this, this.pauseTimeOut);
         }
-        egret.setTimeout(function () {
-            theRhi.removeChild(theRhi.hitPerformance);
-            for (i = 0; i < this.theBullets.length; i++) {
-                egret.Tween.resumeTweens(this.theBullets[i]);
-            }
-            this.rhinoceros.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.mouseDown, this);
-            this.rhinoceros.addEventListener(egret.TouchEvent.TOUCH_END, this.mouseUp, this);
-        }, this, 400);
     };
     /**
      * 转向时的变化

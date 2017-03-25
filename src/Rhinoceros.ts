@@ -16,22 +16,24 @@ class Rhinoceros extends egret.DisplayObjectContainer{
         this.hitPerformance.anchorOffsetX = this.hitPerformance.width/2;
         this.hitPerformance.anchorOffsetY = this.hitPerformance.height/2;
 
-        this.hitPerformance.x = this.width/2.5;
+        this.hitPerformance.x = this.width/2;
         this.hitPerformance.y = this.height/1.7;
 
         this.anchorOffsetX = this.width/2;
         this.anchorOffsetY = this.height/2;
 
         this.isLeft = true;
+        this.hitNum = 0;
     }
     public hurt(){
         this.hitNum += 1;
         
-        if(this.hitNum <= 3){
-            
+        if(this.hitNum <= 3)
+        {
             this.dispatchEventWith("changeStep",false,this.hitNum);
         }
     }
+
     public turn(){
         this.isLeft = !this.isLeft;
         this.dispatchEventWith("turnTo");

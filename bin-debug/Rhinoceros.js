@@ -18,11 +18,12 @@ var Rhinoceros = (function (_super) {
         _this.hitPerformance = GameUtil.createBitmapByName("hit_png");
         _this.hitPerformance.anchorOffsetX = _this.hitPerformance.width / 2;
         _this.hitPerformance.anchorOffsetY = _this.hitPerformance.height / 2;
-        _this.hitPerformance.x = _this.width / 2.5;
+        _this.hitPerformance.x = _this.width / 2;
         _this.hitPerformance.y = _this.height / 1.7;
         _this.anchorOffsetX = _this.width / 2;
         _this.anchorOffsetY = _this.height / 2;
         _this.isLeft = true;
+        _this.hitNum = 0;
         return _this;
     }
     Rhinoceros.prototype.hurt = function () {

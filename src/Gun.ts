@@ -3,7 +3,7 @@ class Gun extends egret.DisplayObjectContainer{
     private bmp:egret.Bitmap;
     private fireDelay:number;
     private fireAngle:number;
-    //private fireTimer:egret.Timer;
+    private speedTime:number = 10000;
 
     public constructor(x:number,y:number,angle:number){
         super();
@@ -12,7 +12,8 @@ class Gun extends egret.DisplayObjectContainer{
         this.fireAngle = angle;
     }
 
-    public fire():void{
-        this.dispatchEventWith("createBullet",false,this.fireAngle);
+    public fire(speedTime:number):void{
+        this.speedTime = speedTime;
+        this.dispatchEventWith("createBullet",false,{angle:this.fireAngle,speedTime:this.speedTime});
     }
 }

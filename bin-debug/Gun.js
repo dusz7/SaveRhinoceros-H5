@@ -8,16 +8,17 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Gun = (function (_super) {
     __extends(Gun, _super);
-    //private fireTimer:egret.Timer;
     function Gun(x, y, angle) {
         var _this = _super.call(this) || this;
+        _this.speedTime = 10000;
         _this.x = x;
         _this.y = y;
         _this.fireAngle = angle;
         return _this;
     }
-    Gun.prototype.fire = function () {
-        this.dispatchEventWith("createBullet", false, this.fireAngle);
+    Gun.prototype.fire = function (speedTime) {
+        this.speedTime = speedTime;
+        this.dispatchEventWith("createBullet", false, { angle: this.fireAngle, speedTime: this.speedTime });
     };
     return Gun;
 }(egret.DisplayObjectContainer));
