@@ -20,7 +20,6 @@ class GameController extends egret.DisplayObjectContainer
     private _distance:egret.Point = new egret.Point(); //鼠标点击时，鼠标全局坐标与_bird的位置差
 
     private theBullets:Bullet[] = [];
-    private _lastTime:number;
 
     private stageW;
     private stageH;
@@ -44,16 +43,6 @@ class GameController extends egret.DisplayObjectContainer
         this.plant = GameUtil.createBitmapByName("plant1_png");
         this.addChildAt(this.plant,-1);
         
-        /*
-        var shp:egret.Shape = new egret.Shape();
-        shp.graphics.beginFill( 0x0000ff );
-        shp.graphics.drawRect( 0, 0, 10, 10 );
-        shp.graphics.endFill();
-        shp.x = 300;
-        shp.y = 600;
-        //console.log(this.stageW+","+this.stageH);
-        this.addChild( shp );
-        */
     }
 
     /**
@@ -74,6 +63,9 @@ class GameController extends egret.DisplayObjectContainer
         this.rhinoceros.addEventListener(egret.TouchEvent.TOUCH_END, this.mouseUp, this);
         this.addChildAt(this.rhinoceros,this.numChildren-1);
 
+        //检测子弹是否击中
+        this.addEventListener(egret.Event.ENTER_FRAME,this.gameHitTest,this);
+
         var gun1:Gun = new Gun(0,250,50);
         var gun2:Gun = new Gun(110,170,80);
         var gun3:Gun = new Gun(275,30,80);
@@ -83,11 +75,6 @@ class GameController extends egret.DisplayObjectContainer
         gun1.fire();
         gun2.fire();
         gun3.fire();
-        
-        //console.log("background:"+this.getChildIndex(this.background)+",rhinoceros:"+this.getChildIndex(this.rhinoceros)+
-        //",gun:"+this.getChildIndex(gun1)+",plant:"+this.getChildIndex(this.plant));
-
-        this.addEventListener(egret.Event.ENTER_FRAME,this.gameViewUpdate,this);
     }
 
     /**
@@ -111,23 +98,18 @@ class GameController extends egret.DisplayObjectContainer
 
     /**游戏画面更新*/
     private gameViewUpdate(evt:egret.Event):void{
-        //为了防止FPS下降造成回收慢，生成快，进而导致DRAW数量失控，需要计算一个系数，当FPS下降的时候，让运动速度加快
+        
+        //回收子弹
+        //var fireSpeed:number = 1;
         /*
-        var nowTime:number = egret.getTimer();
-        var fps:number = 1000/(nowTime-this._lastTime);
-        this._lastTime = nowTime;
-        var speedOffset:number = 60/fps;
-        */
-        //我的子弹运动
-        var fireSpeed:number = 1;
         var i:number = 0;
         var bullet:Bullet;
         var myBulletsCount:number = this.theBullets.length;
         var delArr:any[] = [];
         for(;i<myBulletsCount;i++) {
             bullet = this.theBullets[i];
-            bullet.x += fireSpeed*(Math.cos(bullet.fireAngle/180*Math.PI));
-            bullet.y += fireSpeed*(Math.sin(bullet.fireAngle/180*Math.PI));
+            //bullet.x += fireSpeed*(Math.cos(bullet.fireAngle/180*Math.PI));
+            //bullet.y += fireSpeed*(Math.sin(bullet.fireAngle/180*Math.PI));
             if(bullet.y > this.stageH || bullet.y < 0 || bullet.x < 0 || bullet.x > this.stageW)
                 delArr.push(bullet);
         }
@@ -137,42 +119,48 @@ class GameController extends egret.DisplayObjectContainer
             Bullet.reclaim(bullet);
             this.theBullets.splice(this.theBullets.indexOf(bullet),1);
         }
-        this.gameHitTest();
+        */
+        //this.gameHitTest();
     }
 
-    /**游戏碰撞检测*/
-    private gameHitTest():void {
-        var i:number,j:number;
+    /**
+     * 以下为各种自定义事件监听
+     */
+
+    /**
+     * 游戏碰撞检测以及子弹击中的结果
+     */
+    private gameHitTest(evt:egret.Event):void 
+    {
+        var i:number;
         var bullet:Bullet;
-        var theGun:Gun;
         var theBulletsCount:number = this.theBullets.length;
         
-        //将需消失的子弹记录
-        var delBullets:Bullet[] = [];
+        var delBullets:Bullet[] = [];//记录需要消失的子弹
         
-        //敌人的子弹可以减我血
+        //被子弹打中以后，受到伤害
         for(i=0;i<theBulletsCount;i++) {
             bullet = this.theBullets[i];
-            if(GameUtil.hitTest(this.rhinoceros,bullet)) {
+            if(this.rhinoceros.hitTestPoint(bullet.x,bullet.y,true)) {
                 this.rhinoceros.hurt();
                 if(delBullets.indexOf(bullet)==-1)
                     delBullets.push(bullet);
             }
         }
+        //打中的子弹需要消失
         while(delBullets.length>0) {
             bullet = delBullets.pop();
             this.removeChild(bullet);
             this.theBullets.splice(this.theBullets.indexOf(bullet),1);
             Bullet.reclaim(bullet);
         }
+
+        //达到伤害上限值，游戏结束
         if(this.rhinoceros.hitNum >= 3) {
-            //console.log("getHurtNum: "+this.rhinoceros.hitNum);
             this.gameStop();
         } 
     }
-
     
-
     /**
      * 创建子弹
      */
@@ -183,40 +171,71 @@ class GameController extends egret.DisplayObjectContainer
         newBullet = Bullet.produce("bullet_png",evt.data);
         newBullet.x = theGun.x;
         newBullet.y = theGun.y;
-        
         this.addChildAt(newBullet,this.numChildren-1);
-        //console.log(this.getChildIndex(bullet));
-        //this.addChildAt(bullet,this.numChildren-1-this.enemyFighters.length);
-        this.theBullets.push(newBullet);
 
+        //设置子弹运动动画
+        let fireSpeedTime:number = 10000;
+        let fireDistance:number = 1.4*this.stageW;
+        this.theBullets.push(newBullet);
+        egret.Tween.get(newBullet)
+        .to({x:newBullet.x+fireDistance*(Math.cos(newBullet.fireAngle/180*Math.PI)),y:newBullet.y+fireDistance*(Math.sin(newBullet.fireAngle/180*Math.PI))},fireSpeedTime)
+        .call(this.onBulletMoveCompleted,this,[newBullet]);
+        
     }
 
     /**
-     * 掉血时的变化
+     * 子弹移动结束后
+     */
+    public onBulletMoveCompleted(theBullet:Bullet)
+    {
+        this.removeChild(theBullet);
+        Bullet.reclaim(theBullet);
+        this.theBullets.splice(this.theBullets.indexOf(theBullet),1);
+    }
+
+    /**
+     * 掉血时的场景变化
      */
     public changeStepHandler(evt:egret.Event)
     {   
+        var theRhi:Rhinoceros = evt.target;
+        this.rhinoceros.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.mouseDown, this);
+        this.rhinoceros.removeEventListener(egret.TouchEvent.TOUCH_END, this.mouseUp, this);
+        var i:number;
+        for(i=0;i<this.theBullets.length;i++){
+            egret.Tween.pauseTweens(this.theBullets[i]);
+        }
+
+        theRhi.addChild(theRhi.hitPerformance);
+
         if(evt.data <= 3){
             let rhiTexture:string = "step";
             let bgTexture:string = "background";
             let plTexture:string = "plant";
-            var theRhi:Rhinoceros = evt.target;
 
             if(theRhi.isLeft == true)
                 rhiTexture += "l";
             else
-                rhiTexture += "r";
+                rhiTexture += "l";
 
             var numS = (evt.data+1).toString();
             rhiTexture += (numS + "_png");
             bgTexture +=  (numS + "_png");
             plTexture +=  (numS + "_png");
-            console.log(rhiTexture);
+            //console.log(rhiTexture);
 
             this.background.texture = RES.getRes(bgTexture);
             this.plant.texture = RES.getRes(plTexture);
             theRhi.bmp.texture = RES.getRes(rhiTexture);
         }
+        egret.setTimeout(function(){
+            theRhi.removeChild(theRhi.hitPerformance);
+            for(i=0;i<this.theBullets.length;i++){
+                egret.Tween.resumeTweens(this.theBullets[i]);
+            }
+            this.rhinoceros.addEventListener(egret.TouchEvent.TOUCH_BEGIN, this.mouseDown, this);
+            this.rhinoceros.addEventListener(egret.TouchEvent.TOUCH_END, this.mouseUp, this);
+        },this,400);
     }
 
     /**
@@ -234,12 +253,17 @@ class GameController extends egret.DisplayObjectContainer
     {
         if( this._touchStatus )
         {
-            if(this._distance.x < 0){
+            if(this._distance.x < 0 && !(this.rhinoceros.isLeft)){
                 //console.log("left");
-            }else if(this._distance.x > 0){
+                //this.rhinoceros.scaleX = -1;
+                this.rhinoceros.isLeft = true;
+                console.log(this.rhinoceros.isLeft);
+            }else if(this._distance.x > 0 && this.rhinoceros.isLeft){
                 //console.log("right");
+                //this.rhinoceros.bmp.scaleX = -1;
+                this.rhinoceros.isLeft = false;
+                console.log(this.rhinoceros.isLeft);
             }
-            //console.log("moving now ! Mouse: [X:"+evt.stageX+",Y:"+evt.stageY+"]");
             this.rhinoceros.x = evt.stageX - this._distance.x;
             this.rhinoceros.y = evt.stageY - this._distance.y;
         }

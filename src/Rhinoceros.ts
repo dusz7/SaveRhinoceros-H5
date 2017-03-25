@@ -1,10 +1,9 @@
 class Rhinoceros extends egret.DisplayObjectContainer{
     
     private textureName:string;
-    private hitPerformance:egret.Bitmap;
+    public hitPerformance:egret.Bitmap;
     public bmp:egret.Bitmap;
     public isLeft:boolean;
-    //public blood:number = 3;
     public hitNum = 0;
 
     public constructor(textureName:string){
@@ -29,10 +28,7 @@ class Rhinoceros extends egret.DisplayObjectContainer{
         this.hitNum += 1;
         
         if(this.hitNum <= 3){
-            this.addChild(this.hitPerformance);
-            egret.setTimeout(function(){
-                this.removeChild(this.hitPerformance);
-            },this,300,);
+            
             this.dispatchEventWith("changeStep",false,this.hitNum);
         }
     }

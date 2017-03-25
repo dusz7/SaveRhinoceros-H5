@@ -10,7 +10,6 @@ var Rhinoceros = (function (_super) {
     __extends(Rhinoceros, _super);
     function Rhinoceros(textureName) {
         var _this = _super.call(this) || this;
-        //public blood:number = 3;
         _this.hitNum = 0;
         _this.textureName = textureName;
         _this.bmp = GameUtil.createBitmapByName(textureName);
@@ -29,10 +28,6 @@ var Rhinoceros = (function (_super) {
     Rhinoceros.prototype.hurt = function () {
         this.hitNum += 1;
         if (this.hitNum <= 3) {
-            this.addChild(this.hitPerformance);
-            egret.setTimeout(function () {
-                this.removeChild(this.hitPerformance);
-            }, this, 300);
             this.dispatchEventWith("changeStep", false, this.hitNum);
         }
     };
