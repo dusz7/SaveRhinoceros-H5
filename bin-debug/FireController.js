@@ -32,10 +32,20 @@ var FireController = (function () {
             var theGun2 = this.myGunsList[gunNum2];
             theGun2.fire(this.nowBulletSpeedTime);
         }
-        if (this.endGame >= 15) {
+        if (this.endGame >= 8) {
             var gunNum3 = Math.floor(Math.random() * this.myGunsList.length);
             var theGun3 = this.myGunsList[gunNum3];
             theGun3.fire(this.nowBulletSpeedTime);
+        }
+        if (this.endGame >= 12) {
+            var gunNum4 = Math.floor(Math.random() * this.myGunsList.length);
+            var theGun4 = this.myGunsList[gunNum4];
+            theGun4.fire(this.nowBulletSpeedTime);
+        }
+        if (this.endGame >= 17) {
+            var gunNum5 = Math.floor(Math.random() * this.myGunsList.length);
+            var theGun5 = this.myGunsList[gunNum5];
+            theGun5.fire(this.nowBulletSpeedTime);
         }
     };
     FireController.prototype.updateSpeedAndDelay = function () {
@@ -43,7 +53,7 @@ var FireController = (function () {
         if (this.nowFireDelay > 800) {
             this.nowFireDelay -= 250;
             this.fireTimer.delay = this.nowFireDelay;
-            this.nowBulletSpeedTime -= 150;
+            this.nowBulletSpeedTime -= 180;
         }
         console.log(this.fireTimer.delay + ",,," + this.nowBulletSpeedTime);
         this.fireTimer.reset();

@@ -1,5 +1,5 @@
 {
-    "useClip": false,
+    "useClip": true,
     "maxImageWidth": 2048,
     "maxImageHeight": 2048,
     "defaultResPath": "/Users/dusz7/Code/EgretProjects/SaveRhinoceros/resource/default.res.json",
