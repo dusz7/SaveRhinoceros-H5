@@ -1,107 +1,197 @@
 {
 	"resources": [
 		{
-			"name": "blood_png",
+			"name": "blood_de1_png",
 			"type": "image",
-			"url": "assets/blood.png"
+			"url": "assets/elements/blood_de1.png"
 		},
 		{
-			"name": "bullet_png",
+			"name": "blood_props_png",
 			"type": "image",
-			"url": "assets/bullet.png"
+			"url": "assets/elements/blood_props.png"
 		},
 		{
-			"name": "hit_png",
+			"name": "blood_re1_png",
 			"type": "image",
-			"url": "assets/hit.png"
+			"url": "assets/elements/blood_re1.png"
 		},
 		{
-			"name": "plant0_png",
+			"name": "blood_re2_png",
 			"type": "image",
-			"url": "assets/plant0.png"
+			"url": "assets/elements/blood_re2.png"
 		},
 		{
-			"name": "plant1_png",
+			"name": "bullet_anesthetic_png",
 			"type": "image",
-			"url": "assets/plant1.png"
+			"url": "assets/elements/bullet_anesthetic.png"
 		},
 		{
-			"name": "plant2_png",
+			"name": "bullet_normal_png",
 			"type": "image",
-			"url": "assets/plant2.png"
+			"url": "assets/elements/bullet_normal.png"
 		},
 		{
-			"name": "plant3_png",
+			"name": "bullet_super_png",
 			"type": "image",
-			"url": "assets/plant3.png"
+			"url": "assets/elements/bullet_super.png"
 		},
 		{
-			"name": "plant4_png",
+			"name": "hit_anesthetic_png",
 			"type": "image",
-			"url": "assets/plant4.png"
+			"url": "assets/elements/hit_anesthetic.png"
 		},
 		{
-			"name": "endtitle_png",
+			"name": "hit_bullet_png",
 			"type": "image",
-			"url": "assets/endtitle.png"
+			"url": "assets/elements/hit_bullet.png"
 		},
 		{
-			"name": "startbutton_png",
+			"name": "rhino_l_png",
 			"type": "image",
-			"url": "assets/startbutton.png"
+			"url": "assets/elements/rhino_l.png"
 		},
 		{
-			"name": "startbuttond_png",
+			"name": "rhino_r_png",
 			"type": "image",
-			"url": "assets/startbuttond.png"
+			"url": "assets/elements/rhino_r.png"
 		},
 		{
-			"name": "step0_png",
+			"name": "background_png",
 			"type": "image",
-			"url": "assets/step0.png"
-		},
-		{
-			"name": "step1_png",
-			"type": "image",
-			"url": "assets/step1.png"
-		},
-		{
-			"name": "step2_png",
-			"type": "image",
-			"url": "assets/step2.png"
-		},
-		{
-			"name": "step3_png",
-			"type": "image",
-			"url": "assets/step3.png"
+			"url": "assets/scenes/background.png"
 		},
 		{
 			"name": "background_end_png",
 			"type": "image",
-			"url": "assets/background_end.png"
+			"url": "assets/scenes/background_end.png"
 		},
 		{
-			"name": "background_start_png",
+			"name": "end_botton_help_png",
 			"type": "image",
-			"url": "assets/background_start.png"
+			"url": "assets/scenes/end_botton_help.png"
+		},
+		{
+			"name": "end_button_again_png",
+			"type": "image",
+			"url": "assets/scenes/end_button_again.png"
+		},
+		{
+			"name": "end_button_continue_png",
+			"type": "image",
+			"url": "assets/scenes/end_button_continue.png"
+		},
+		{
+			"name": "end_note_green_png",
+			"type": "image",
+			"url": "assets/scenes/end_note_green.png"
+		},
+		{
+			"name": "end_note_red_png",
+			"type": "image",
+			"url": "assets/scenes/end_note_red.png"
+		},
+		{
+			"name": "end_score_png",
+			"type": "image",
+			"url": "assets/scenes/end_score.png"
+		},
+		{
+			"name": "plant_png",
+			"type": "image",
+			"url": "assets/scenes/plant.png"
+		},
+		{
+			"name": "round1_png",
+			"type": "image",
+			"url": "assets/scenes/round1.png"
+		},
+		{
+			"name": "round2_png",
+			"type": "image",
+			"url": "assets/scenes/round2.png"
+		},
+		{
+			"name": "round3_png",
+			"type": "image",
+			"url": "assets/scenes/round3.png"
+		},
+		{
+			"name": "start_button_png",
+			"type": "image",
+			"url": "assets/scenes/start_button.png"
+		},
+		{
+			"name": "top_column_png",
+			"type": "image",
+			"url": "assets/scenes/top_column.png"
+		},
+		{
+			"name": "top_column_blood_png",
+			"type": "image",
+			"url": "assets/scenes/top_column_blood.png"
+		},
+		{
+			"name": "top_column_bullet_png",
+			"type": "image",
+			"url": "assets/scenes/top_column_bullet.png"
+		},
+		{
+			"name": "top_column_round1_png",
+			"type": "image",
+			"url": "assets/scenes/top_column_round1.png"
+		},
+		{
+			"name": "top_column_round2_png",
+			"type": "image",
+			"url": "assets/scenes/top_column_round2.png"
+		},
+		{
+			"name": "top_column_round3_png",
+			"type": "image",
+			"url": "assets/scenes/top_column_round3.png"
+		},
+		{
+			"name": "teaching_step1_png",
+			"type": "image",
+			"url": "assets/teaching/teaching_step1.png"
+		},
+		{
+			"name": "teaching_step2_png",
+			"type": "image",
+			"url": "assets/teaching/teaching_step2.png"
+		},
+		{
+			"name": "teaching_step3_png",
+			"type": "image",
+			"url": "assets/teaching/teaching_step3.png"
+		},
+		{
+			"name": "teaching_step4_png",
+			"type": "image",
+			"url": "assets/teaching/teaching_step4.png"
+		},
+		{
+			"name": "teaching_step5_png",
+			"type": "image",
+			"url": "assets/teaching/teaching_step5.png"
 		}
 	],
 	"groups": [
 		{
 			"name": "preload",
-			"keys": "blood_png,bullet_png,hit_png,plant1_png,plant2_png,plant3_png,plant4_png,endtitle_png,startbutton_png,startbuttond_png,step1_png,step2_png,step3_png,background_end_png,background_start_png,step0_png,plant0_png"
+			"keys": "blood_de1_png,blood_props_png,blood_re1_png,blood_re2_png,bullet_anesthetic_png,bullet_normal_png,bullet_super_png,hit_anesthetic_png,hit_bullet_png,rhino_l_png,rhino_r_png,background_png,background_end_png,end_botton_help_png,end_button_again_png,end_button_continue_png,end_note_green_png,end_note_red_png,end_score_png,plant_png,round1_png,round2_png,round3_png,start_button_png,top_column_png,top_column_blood_png,top_column_bullet_png,top_column_round1_png,top_column_round2_png,top_column_round3_png,teaching_step1_png,teaching_step2_png,teaching_step3_png,teaching_step4_png,teaching_step5_png"
 		},
 		{
 			"name": "myPreload",
-			"keys": "background_start_png,plant0_png,plant1_png,plant2_png,step0_png,step1_png,startbutton_png,startbuttond_png,bullet_png,hit_png"
+			"keys": "background_png,plant_png,start_button_png,top_column_png,top_column_blood_png,top_column_bullet_png,round1_png,top_column_round1_png,round2_png,top_column_round2_png,blood_re1_png,blood_re2_png,blood_de1_png,rhino_l_png,bullet_normal_png,bullet_super_png,hit_bullet_png,blood_props_png"
 		},
 		{
 			"name": "otherSteps",
-			"keys": "plant3_png,step2_png,step3_png,plant4_png,background_end_png"
+			"keys": "round3_png,top_column_round3_png,bullet_anesthetic_png,hit_anesthetic_png"
 		},
 		{
 			"name": "gameEnd",
-			"keys": "blood_png,endtitle_png"
+			"keys": "end_score_png,end_button_continue_png,background_end_png,end_botton_help_png,end_button_again_png,end_note_red_png,end_note_green_png"
 		}
 	]
 }

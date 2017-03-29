@@ -4,7 +4,7 @@ class Rhinoceros extends egret.DisplayObjectContainer{
     public hitPerformance:egret.Bitmap;
     public bmp:egret.Bitmap;
     public isLeft:boolean;
-    public hitNum = 0;
+    public bloodNum;
 
     public constructor(textureName:string){
         super();
@@ -12,7 +12,7 @@ class Rhinoceros extends egret.DisplayObjectContainer{
         this.bmp = GameUtil.createBitmapByName(textureName);
         this.bmp.pixelHitTest = true;
         this.addChild(this.bmp);
-        this.hitPerformance = GameUtil.createBitmapByName("hit_png");
+        this.hitPerformance = GameUtil.createBitmapByName("hit_bullet_png");
         this.hitPerformance.anchorOffsetX = this.hitPerformance.width/2;
         this.hitPerformance.anchorOffsetY = this.hitPerformance.height/2;
 
@@ -23,14 +23,14 @@ class Rhinoceros extends egret.DisplayObjectContainer{
         this.anchorOffsetY = this.height/2;
 
         this.isLeft = true;
-        this.hitNum = 0;
+        this.bloodNum = 3;
     }
     public hurt(){
-        this.hitNum += 1;
+        this.bloodNum -= 1;
         
-        if(this.hitNum <= 3)
+        if(this.bloodNum >= 0)
         {
-            this.dispatchEventWith("changeStep",false,this.hitNum);
+            this.dispatchEventWith("changeStep",false,this.bloodNum);
         }
     }
 

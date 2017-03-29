@@ -74,13 +74,13 @@ class Main extends egret.DisplayObjectContainer {
             this.stage.removeChild(this.loadingView);
             RES.removeEventListener(RES.ResourceEvent.GROUP_PROGRESS, this.onResourceProgress, this);
             console.log("myPreload completed!");
-            RES.loadGroup("otherSteps");
+            RES.loadGroup("gameEnd");
             var gameController:GameController = new GameController();
             this.addChild(gameController);
-        }else if(event.groupName == "otherSteps"){
-            console.log("otherSteps completed!");
-            RES.loadGroup("gameEnd");
         }else if(event.groupName == "gameEnd"){
+            console.log("otherSteps completed!");
+            RES.loadGroup("otherSteps");
+        }else if(event.groupName == "otherSteps"){
             console.log("gameEnd completed!");
             RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
             RES.removeEventListener(RES.ResourceEvent.GROUP_LOAD_ERROR, this.onResourceLoadError, this);

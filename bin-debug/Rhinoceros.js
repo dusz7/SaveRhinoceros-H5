@@ -10,12 +10,11 @@ var Rhinoceros = (function (_super) {
     __extends(Rhinoceros, _super);
     function Rhinoceros(textureName) {
         var _this = _super.call(this) || this;
-        _this.hitNum = 0;
         _this.textureName = textureName;
         _this.bmp = GameUtil.createBitmapByName(textureName);
         _this.bmp.pixelHitTest = true;
         _this.addChild(_this.bmp);
-        _this.hitPerformance = GameUtil.createBitmapByName("hit_png");
+        _this.hitPerformance = GameUtil.createBitmapByName("hit_bullet_png");
         _this.hitPerformance.anchorOffsetX = _this.hitPerformance.width / 2;
         _this.hitPerformance.anchorOffsetY = _this.hitPerformance.height / 2;
         _this.hitPerformance.x = _this.width / 2;
@@ -23,13 +22,13 @@ var Rhinoceros = (function (_super) {
         _this.anchorOffsetX = _this.width / 2;
         _this.anchorOffsetY = _this.height / 2;
         _this.isLeft = true;
-        _this.hitNum = 0;
+        _this.bloodNum = 3;
         return _this;
     }
     Rhinoceros.prototype.hurt = function () {
-        this.hitNum += 1;
-        if (this.hitNum <= 3) {
-            this.dispatchEventWith("changeStep", false, this.hitNum);
+        this.bloodNum -= 1;
+        if (this.bloodNum >= 0) {
+            this.dispatchEventWith("changeStep", false, this.bloodNum);
         }
     };
     Rhinoceros.prototype.turn = function () {
