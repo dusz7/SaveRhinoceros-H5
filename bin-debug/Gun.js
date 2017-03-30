@@ -16,9 +16,11 @@ var Gun = (function (_super) {
         _this.fireAngle = angle;
         return _this;
     }
-    Gun.prototype.fire = function (speedTime) {
+    Gun.prototype.fire = function (bulletTexture, bulletDamage, speedTime) {
+        this.bulletTexture = bulletTexture;
+        this.bulletDamage = bulletDamage;
         this.speedTime = speedTime;
-        this.dispatchEventWith("createBullet", false, { angle: this.fireAngle, speedTime: this.speedTime });
+        this.dispatchEventWith("createBullet", false, { bulletTexture: this.bulletTexture, bulletDamage: this.bulletDamage, angle: this.fireAngle, speedTime: this.speedTime });
     };
     return Gun;
 }(egret.DisplayObjectContainer));

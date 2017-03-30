@@ -39,15 +39,16 @@ class LoadingUI extends egret.Sprite {
     private createView():void {
         this.textField = new egret.TextField();
         this.addChild(this.textField);
-        this.textField.x = 650;
-        this.textField.y = 400;
+        this.textField.x = 600;
+        this.textField.y = 450;
         this.textField.width = 600;
         this.textField.height = 200;
+        this.textField.textColor = 0x000000;
         this.textField.textAlign = "center";
     }
 
     public setProgress(current:number, total:number):void {
-        this.textField.size = 30;
+        this.textField.size = 60;
         this.textField.text = `Loading...${current}/${total}`;
     }
 }

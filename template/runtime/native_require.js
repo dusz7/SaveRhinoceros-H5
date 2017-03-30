@@ -8,14 +8,18 @@ var game_file_list = [
 	"libs/modules/res/res.js",
 	"libs/modules/tween/tween.js",
 	"polyfill/promise.js",
-	"bin-debug/Bullet.js",
+	"bin-debug/LoadingUI.js",
+	"bin-debug/BloodProps.js",
 	"bin-debug/FireController.js",
 	"bin-debug/GameController.js",
 	"bin-debug/GameUtil.js",
 	"bin-debug/Gun.js",
-	"bin-debug/LoadingUI.js",
+	"bin-debug/Bullet.js",
 	"bin-debug/Main.js",
+	"bin-debug/PropsController.js",
+	"bin-debug/PropsPoint.js",
 	"bin-debug/Rhinoceros.js",
+	"bin-debug/TopColumn.js",
 	//----auto game_file_list end----
 ];
 

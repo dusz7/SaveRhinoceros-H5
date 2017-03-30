@@ -1,17 +1,28 @@
 var __reflect = (this && this.__reflect) || function (p, c, t) {
     p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
 };
-var FireController = (function () {
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var FireController = (function (_super) {
+    __extends(FireController, _super);
     function FireController(guns) {
-        this.myGunsList = [];
-        this.nowRepeatNum = 5;
-        this.endGame = 0;
-        this.myGunsList = guns;
-        this.fireTimer = new egret.Timer(this.nowFireDelay);
-        this.fireTimer.repeatCount = this.nowRepeatNum;
-        this.fireTimer.addEventListener(egret.TimerEvent.TIMER, this.chooseAGunAndFire, this);
-        this.fireTimer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, this.updateSpeedAndDelay, this);
-        this.endGame = 0;
+        var _this = _super.call(this) || this;
+        _this.myGunsList = [];
+        _this.nowBulletRepeatNum = 5;
+        _this.nowStepRepeatNum = 0;
+        _this.round2StepNum = 4;
+        _this.round3StepNum = 16;
+        _this.myGunsList = guns;
+        _this.fireTimer = new egret.Timer(_this.nowFireDelay);
+        _this.fireTimer.repeatCount = _this.nowBulletRepeatNum;
+        _this.fireTimer.addEventListener(egret.TimerEvent.TIMER, _this.chooseAGunAndFire, _this);
+        _this.fireTimer.addEventListener(egret.TimerEvent.TIMER_COMPLETE, _this.updateSpeedAndDelay, _this);
+        _this.nowStepRepeatNum = 0;
+        _this.lastRadom = guns.length;
+        return _this;
     }
     FireController.prototype.startFire = function (delay, speed) {
         this.nowFireDelay = delay;
@@ -21,45 +32,77 @@ var FireController = (function () {
     };
     FireController.prototype.stopFire = function () {
         this.fireTimer.reset();
+        this.nowStepRepeatNum = 0;
+    };
+    FireController.prototype.pauseFire = function () {
+        this.fireTimer.stop();
+    };
+    FireController.prototype.resumeFire = function () {
+        this.fireTimer.start();
     };
     FireController.prototype.chooseAGunAndFire = function () {
-        var gunNum = Math.floor(Math.random() * this.myGunsList.length);
-        //console.log("now the fire gun is : "+gunNum);
-        var theGun = this.myGunsList[gunNum];
-        theGun.fire(this.nowBulletSpeedTime);
-        if (this.endGame >= 4) {
-            var gunNum2 = Math.floor(Math.random() * this.myGunsList.length);
-            var theGun2 = this.myGunsList[gunNum2];
-            theGun2.fire(this.nowBulletSpeedTime);
+        //什么时候都会开一枪
+        this.randomGun("normal");
+        if (this.nowStepRepeatNum >= this.round2StepNum && this.fireTimer.currentCount % 2 == 0) {
+            this.randomGun("super");
         }
-        if (this.endGame >= 8) {
-            var gunNum3 = Math.floor(Math.random() * this.myGunsList.length);
-            var theGun3 = this.myGunsList[gunNum3];
-            theGun3.fire(this.nowBulletSpeedTime);
+        if (this.nowStepRepeatNum >= this.round3StepNum && this.fireTimer.currentCount % 3 == 0) {
+            this.randomGun("anesthetic");
         }
-        if (this.endGame >= 12) {
-            var gunNum4 = Math.floor(Math.random() * this.myGunsList.length);
-            var theGun4 = this.myGunsList[gunNum4];
-            theGun4.fire(this.nowBulletSpeedTime);
-        }
-        if (this.endGame >= 17) {
-            var gunNum5 = Math.floor(Math.random() * this.myGunsList.length);
-            var theGun5 = this.myGunsList[gunNum5];
-            theGun5.fire(this.nowBulletSpeedTime);
+        if (this.nowStepRepeatNum >= this.round3StepNum + 5 && this.fireTimer.currentCount % 3 == 0) {
+            this.randomGun("normal");
         }
     };
     FireController.prototype.updateSpeedAndDelay = function () {
-        this.endGame++;
-        if (this.nowFireDelay > 800) {
-            this.nowFireDelay -= 250;
+        this.nowStepRepeatNum++;
+        if (this.nowFireDelay > 1000) {
+            this.nowFireDelay -= 205;
             this.fireTimer.delay = this.nowFireDelay;
-            this.nowBulletSpeedTime -= 180;
+            this.nowBulletSpeedTime -= 160;
         }
-        console.log(this.fireTimer.delay + ",,," + this.nowBulletSpeedTime);
+        //console.log(this.fireTimer.delay+",,,"+this.nowBulletSpeedTime);
         this.fireTimer.reset();
-        this.fireTimer.start();
+        if (this.nowStepRepeatNum == this.round2StepNum) {
+            egret.setTimeout(function () {
+                this.dispatchEventWith("updateRound", false, 2);
+            }, this, this.nowBulletSpeedTime);
+        }
+        else if (this.nowStepRepeatNum == this.round3StepNum) {
+            egret.setTimeout(function () {
+                this.dispatchEventWith("updateRound", false, 3);
+            }, this, this.nowBulletSpeedTime);
+        }
+        else {
+            this.fireTimer.start();
+        }
+    };
+    /**
+     * 随机选数，开枪
+     */
+    FireController.prototype.randomGun = function (type) {
+        var textureName;
+        var damageNum;
+        if (type == "normal") {
+            textureName = "bullet_normal_png";
+            damageNum = 1;
+        }
+        else if (type == "super") {
+            textureName = "bullet_super_png";
+            damageNum = 2;
+        }
+        else if (type == "anesthetic") {
+            textureName = "bullet_anesthetic_png";
+            damageNum = 0;
+        }
+        var gunNo = Math.floor(Math.random() * this.myGunsList.length);
+        while (gunNo == this.lastRadom) {
+            gunNo = Math.floor(Math.random() * this.myGunsList.length);
+        }
+        this.lastRadom = gunNo;
+        var theGun = this.myGunsList[gunNo];
+        theGun.fire(textureName, damageNum, this.nowBulletSpeedTime);
     };
     return FireController;
-}());
+}(egret.DisplayObject));
 __reflect(FireController.prototype, "FireController");
 //# sourceMappingURL=FireController.js.map

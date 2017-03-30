@@ -1,21 +1,29 @@
 
-class FireController
+class FireController extends egret.DisplayObject
 {
     private myGunsList:Gun[] = [];
     private fireTimer:egret.Timer;
     private nowFireDelay:number;
     private nowBulletSpeedTime:number;
-    private nowRepeatNum:number = 5;
-    private endGame:number = 0;
+    private nowBulletRepeatNum:number = 5;
+    private nowStepRepeatNum:number = 0;
+
+    private round2StepNum:number = 4;
+    private round3StepNum:number = 16;
+
+    private lastRadom:number;
 
     public constructor(guns:Gun[])
     {
+        super();
         this.myGunsList = guns;
         this.fireTimer = new egret.Timer(this.nowFireDelay);
-        this.fireTimer.repeatCount = this.nowRepeatNum;
-        this.fireTimer.addEventListener(egret.TimerEvent.TIMER,this.chooseAGunAndFire,this)
+        this.fireTimer.repeatCount = this.nowBulletRepeatNum;
+        this.fireTimer.addEventListener(egret.TimerEvent.TIMER,this.chooseAGunAndFire,this);
         this.fireTimer.addEventListener(egret.TimerEvent.TIMER_COMPLETE,this.updateSpeedAndDelay,this);
-        this.endGame = 0;
+        this.nowStepRepeatNum = 0;
+
+        this.lastRadom = guns.length;
     }
 
     public startFire(delay:number,speed:number)
@@ -29,50 +37,90 @@ class FireController
     public stopFire()
     {
         this.fireTimer.reset();
+        this.nowStepRepeatNum = 0;
+    }
+
+    public pauseFire()
+    {
+        this.fireTimer.stop();
+    }
+
+    public resumeFire()
+    {
+        this.fireTimer.start();
     }
 
     public chooseAGunAndFire()
     {
-        var gunNum = Math.floor(Math.random()*this.myGunsList.length);
-        //console.log("now the fire gun is : "+gunNum);
-        var theGun:Gun = this.myGunsList[gunNum];
-        theGun.fire(this.nowBulletSpeedTime);
-        if(this.endGame >= 4)
+        //什么时候都会开一枪
+        this.randomGun("normal");
+
+        if(this.nowStepRepeatNum >= this.round2StepNum && this.fireTimer.currentCount%2 == 0)
         {
-            var gunNum2 = Math.floor(Math.random()*this.myGunsList.length);
-            var theGun2:Gun = this.myGunsList[gunNum2];
-            theGun2.fire(this.nowBulletSpeedTime);
+            this.randomGun("super");
         }
-        if(this.endGame >= 8)
+        if(this.nowStepRepeatNum >= this.round3StepNum && this.fireTimer.currentCount%3 == 0)
         {
-            var gunNum3 = Math.floor(Math.random()*this.myGunsList.length);
-            var theGun3:Gun = this.myGunsList[gunNum3];
-            theGun3.fire(this.nowBulletSpeedTime);
+            this.randomGun("anesthetic");
         }
-        if(this.endGame >= 12)
+        if(this.nowStepRepeatNum >= this.round3StepNum+5 && this.fireTimer.currentCount%3 == 0)
         {
-            var gunNum4 = Math.floor(Math.random()*this.myGunsList.length);
-            var theGun4:Gun = this.myGunsList[gunNum4];
-            theGun4.fire(this.nowBulletSpeedTime);
-        }
-        if(this.endGame >= 17)
-        {
-            var gunNum5 = Math.floor(Math.random()*this.myGunsList.length);
-            var theGun5:Gun = this.myGunsList[gunNum5];
-            theGun5.fire(this.nowBulletSpeedTime);
+            this.randomGun("normal");
         }
     }
 
+
     public updateSpeedAndDelay()
     {
-        this.endGame ++;
-        if(this.nowFireDelay > 800){
-            this.nowFireDelay -= 250; 
+        this.nowStepRepeatNum ++;
+        if(this.nowFireDelay > 1000){
+            this.nowFireDelay -= 205; 
             this.fireTimer.delay = this.nowFireDelay;
-            this.nowBulletSpeedTime -= 180;
+            this.nowBulletSpeedTime -= 160;
         }
-        console.log(this.fireTimer.delay+",,,"+this.nowBulletSpeedTime);
+        //console.log(this.fireTimer.delay+",,,"+this.nowBulletSpeedTime);
         this.fireTimer.reset();
-        this.fireTimer.start();
+        if(this.nowStepRepeatNum == this.round2StepNum){
+            egret.setTimeout(function(){
+                this.dispatchEventWith("updateRound",false,2);
+            },this,this.nowBulletSpeedTime);
+        }else if(this.nowStepRepeatNum == this.round3StepNum){
+            egret.setTimeout(function(){
+                this.dispatchEventWith("updateRound",false,3);
+            },this,this.nowBulletSpeedTime);
+        }else {
+            this.fireTimer.start();
+        }
+        
+    }
+
+    /**
+     * 随机选数，开枪
+     */
+    public randomGun(type:string)
+    {
+        var textureName:string; var damageNum:number;
+        if(type == "normal")
+        {
+            textureName = "bullet_normal_png";
+            damageNum = 1;
+        }else if(type == "super")
+        {
+            textureName = "bullet_super_png";
+            damageNum = 2;
+        }else if(type == "anesthetic")
+        {
+            textureName = "bullet_anesthetic_png";
+            damageNum = 0;
+        }
+
+        var gunNo = Math.floor(Math.random()*this.myGunsList.length);
+        while(gunNo == this.lastRadom)
+        {
+            gunNo = Math.floor(Math.random()*this.myGunsList.length);
+        }
+        this.lastRadom = gunNo;
+        var theGun = this.myGunsList[gunNo];
+        theGun.fire(textureName,damageNum,this.nowBulletSpeedTime);
     }
 }

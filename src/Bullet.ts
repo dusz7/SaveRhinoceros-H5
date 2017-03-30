@@ -6,24 +6,26 @@ class Bullet extends egret.Bitmap
 {
     private textureName:string;//可视为子弹类型名
     public fireAngle:number;
+    public damageNum:number;
 
     private static cacheDict:Object = {};
 
-    public constructor(texture:egret.Texture,angle:number) {
+    public constructor(texture:egret.Texture,damage:number,angle:number) {
         super(texture);
-        //this.textureName = textureName;
-        this.fireAngle = angle;
         
+        this.damageNum = damage;
+        this.fireAngle = angle;
+
         this.anchorOffsetX = this.width/2;
         this.anchorOffsetY = this.height/2;
         this.rotation = angle;
-        this.anchorOffsetX = this.width;
+        this.anchorOffsetX = this.width/4*3;
 	}
 
     /**
      * 生产
      */
-    public static produce(textureName:string,angle:number):Bullet
+    public static produce(textureName:string,damage:number,angle:number):Bullet
     {
         if(Bullet.cacheDict[textureName]==null)
             Bullet.cacheDict[textureName] = [];
@@ -32,12 +34,13 @@ class Bullet extends egret.Bitmap
         if(dict.length>0) {
             bullet = dict.pop();
         } else {
-            bullet = new Bullet(RES.getRes(textureName),angle);
+            bullet = new Bullet(RES.getRes(textureName),damage,angle);
             bullet.pixelHitTest = true;
         }
-        bullet.textureName = textureName;
-        bullet.fireAngle = angle;
+        bullet.texture = RES.getRes(textureName);
         bullet.rotation = angle;
+        bullet.fireAngle = angle;
+        bullet.damageNum = damage;
         return bullet;
     }
 

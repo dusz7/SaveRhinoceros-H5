@@ -8,31 +8,65 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Rhinoceros = (function (_super) {
     __extends(Rhinoceros, _super);
+    //public isLeft:boolean;
     function Rhinoceros(textureName) {
         var _this = _super.call(this) || this;
-        _this.textureName = textureName;
+        //初始化犀牛形象
         _this.bmp = GameUtil.createBitmapByName(textureName);
-        _this.bmp.pixelHitTest = true;
+        //this.bmp.pixelHitTest = true;
         _this.addChild(_this.bmp);
-        _this.hitPerformance = GameUtil.createBitmapByName("hit_bullet_png");
-        _this.hitPerformance.anchorOffsetX = _this.hitPerformance.width / 2;
-        _this.hitPerformance.anchorOffsetY = _this.hitPerformance.height / 2;
-        _this.hitPerformance.x = _this.width / 2;
-        _this.hitPerformance.y = _this.height / 1.7;
-        _this.anchorOffsetX = _this.width / 2;
-        _this.anchorOffsetY = _this.height / 2;
-        _this.isLeft = true;
+        //初始化被子弹击中的场景
+        _this.hitBulletPerformance = GameUtil.createBitmapByName("hit_bullet_png");
+        _this.hitBulletPerformance.anchorOffsetX = _this.hitBulletPerformance.width / 2;
+        _this.hitBulletPerformance.anchorOffsetY = _this.hitBulletPerformance.height / 2;
+        _this.hitBulletPerformance.x = _this.width / 2;
+        _this.hitBulletPerformance.y = _this.height / 1.7;
+        //初始化被麻醉针击中的场景
+        _this.hitAnestheticPerformance = GameUtil.createBitmapByName("hit_anesthetic_png");
+        _this.hitAnestheticPerformance.anchorOffsetX = _this.hitAnestheticPerformance.width / 2;
+        _this.hitAnestheticPerformance.anchorOffsetY = _this.hitAnestheticPerformance.width / 2;
+        _this.hitAnestheticPerformance.x = _this.width / 4;
+        _this.hitAnestheticPerformance.y = 0;
+        //设置锚点为中心位置
+        //this.anchorOffsetX = this.width/2;
+        //this.anchorOffsetY = this.height/2;
+        //初始化犀牛的属性
+        //this.isLeft = true;
         _this.bloodNum = 3;
         return _this;
     }
-    Rhinoceros.prototype.hurt = function () {
-        this.bloodNum -= 1;
-        if (this.bloodNum >= 0) {
-            this.dispatchEventWith("changeStep", false, this.bloodNum);
+    /**
+     * 犀牛被击中
+     */
+    Rhinoceros.prototype.getHurt = function (bulletDamageNum, hitX, hitY) {
+        this.bloodNum -= bulletDamageNum;
+        this.hitBulletPerformance.x = hitX;
+        this.hitBulletPerformance.y = hitY;
+        if (this.bloodNum >= -1) {
+            this.addChild(this.hitBulletPerformance);
+            if (bulletDamageNum == 0) {
+                this.addChild(this.hitAnestheticPerformance);
+            }
+            egret.setTimeout(function () {
+                this.removeChild(this.hitBulletPerformance);
+                if (bulletDamageNum == 0) {
+                    this.removeChild(this.hitAnestheticPerformance);
+                }
+            }, this, 400);
+            this.dispatchEventWith("getHurt", false, { bloodNum: this.bloodNum, bulletDamage: bulletDamageNum });
+        }
+    };
+    /**
+     * 犀牛得到回血道具
+     */
+    Rhinoceros.prototype.getTreat = function () {
+        if (this.bloodNum < 3) {
+            this.bloodNum++;
+            this.dispatchEventWith("getTreat", false, this.bloodNum);
         }
     };
     Rhinoceros.prototype.turn = function () {
-        this.isLeft = !this.isLeft;
+        //this.isLeft = !this.isLeft;
         this.dispatchEventWith("turnTo");
     };
     return Rhinoceros;
