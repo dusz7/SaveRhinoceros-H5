@@ -10,6 +10,7 @@ var TopColumn = (function (_super) {
     __extends(TopColumn, _super);
     function TopColumn() {
         var _this = _super.call(this) || this;
+        _this.isTeaching = false;
         _this.topColumn = GameUtil.createBitmapByName("top_column_png");
         _this.addChild(_this.topColumn);
         _this.topColumnRound = GameUtil.createBitmapByName("top_column_round1_png");
@@ -50,12 +51,16 @@ var TopColumn = (function (_super) {
         texture += "_png";
         this.topColumnBloodNote.texture = RES.getRes(texture);
         this.addChild(this.topColumnBloodNote);
-        egret.setTimeout(function () {
-            this.removeChild(this.topColumnBloodNote);
-        }, this, 400);
+        if (!this.isTeaching) {
+            egret.setTimeout(function () {
+                this.removeChild(this.topColumnBloodNote);
+            }, this, 400);
+        }
     };
     TopColumn.prototype.removeBloodNote = function () {
-        this.removeChild(this.topColumnBloodNote);
+        if (this.getChildIndex(this.topColumnBloodNote) != -1) {
+            this.removeChild(this.topColumnBloodNote);
+        }
     };
     TopColumn.prototype.updateBlood = function (bloodNow) {
         this.addChild(this.topColumnBlood1);

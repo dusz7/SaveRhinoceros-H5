@@ -91,6 +91,7 @@ var GameController = (function (_super) {
         if (roundNum == 1) {
             egret.setTimeout(function () {
                 this.removeChild(this.roundShowCen);
+                //this.topColumn.updateRoundNum(1);
                 this.gameStart();
             }, this, 3 * this.pauseTimeOut);
         }
@@ -206,6 +207,9 @@ var GameController = (function (_super) {
      */
     GameController.prototype.gameStop = function () {
         //移除各项监听事件，删除所有对象
+        if (this.getChildIndex(this.theBloodProps) != -1) {
+            this.removeChild(this.theBloodProps);
+        }
         this.rhinoceros.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.mouseDown, this); //移除犀牛的监听事件
         this.rhinoceros.removeEventListener(egret.TouchEvent.TOUCH_END, this.mouseUp, this);
         this.rhinoceros.removeEventListener("getHurt", this.getHurtHandler, this);
@@ -252,14 +256,14 @@ var GameController = (function (_super) {
         this.addChild(this.resultScoreShow);
         //设置分数显示文字
         this.resultScoreText = new egret.TextField();
-        this.resultScoreText.width = 170;
+        this.resultScoreText.width = 230;
         this.resultScoreText.height = 130;
         this.resultScoreText.text = this.passNum.toString();
         this.resultScoreText.textAlign = "center";
         this.resultScoreText.bold = true;
         this.resultScoreText.size = 110;
         this.resultScoreText.textColor = 0xd5221e;
-        this.resultScoreText.x = 1175;
+        this.resultScoreText.x = 1140;
         this.resultScoreText.y = 610;
         this.addChild(this.resultScoreText);
         //添加“下一页”按钮
@@ -350,16 +354,6 @@ var GameController = (function (_super) {
                 }
             }
         }
-        /*
-                //打中的子弹需要消失、回收
-                for(i=0; i<hitDelBullets.length; i++) {
-                    theBullet = hitDelBullets[i];
-                    egret.Tween.removeTweens(theBullet);
-                    this.removeChild(theBullet);
-                    this.theBulletsList.splice(this.theBulletsList.indexOf(theBullet),1);
-                    Bullet.reclaim(theBullet);
-                }
-        */
         //出界的子弹需要消失、回收，更新分数
         for (i = 0; i < outDelBullets.length; i++) {
             this.passNum++;

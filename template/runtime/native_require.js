@@ -19,6 +19,7 @@ var game_file_list = [
 	"bin-debug/PropsController.js",
 	"bin-debug/PropsPoint.js",
 	"bin-debug/Rhinoceros.js",
+	"bin-debug/TeachingController.js",
 	"bin-debug/TopColumn.js",
 	//----auto game_file_list end----
 ];

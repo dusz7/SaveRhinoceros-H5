@@ -5,15 +5,18 @@ class TopColumn extends egret.DisplayObjectContainer
     private topColumnBlood1:egret.Bitmap;
     private topColumnBlood2:egret.Bitmap;
     private topColumnBlood3:egret.Bitmap;
-    //private topColumnBlood4:egret.Bitmap;
     private topColumnBullet:egret.Bitmap;
     private topColumnBulletNum:egret.TextField;
 
     public topColumnBloodNote:egret.Bitmap;
 
+    public isTeaching:boolean;
+
     public constructor()
     {
         super();
+        this.isTeaching = false;
+
         this.topColumn = GameUtil.createBitmapByName("top_column_png");
         this.addChild(this.topColumn);
 
@@ -54,15 +57,20 @@ class TopColumn extends egret.DisplayObjectContainer
         this.topColumnBloodNote.texture = RES.getRes(texture);
         this.addChild(this.topColumnBloodNote);
 
-        egret.setTimeout(function()
-        {
-            this.removeChild(this.topColumnBloodNote);
-        },this,400);
+        if(!this.isTeaching){
+            egret.setTimeout(function()
+            {
+                this.removeChild(this.topColumnBloodNote);
+            },this,400);
+        }
         
     }
     public removeBloodNote()
     {
-        this.removeChild(this.topColumnBloodNote);
+        if(this.getChildIndex(this.topColumnBloodNote) != -1)
+        {
+            this.removeChild(this.topColumnBloodNote);
+        }
     }
     public updateBlood(bloodNow:number)
     {

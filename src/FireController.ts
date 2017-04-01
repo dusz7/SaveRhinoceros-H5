@@ -9,7 +9,7 @@ class FireController extends egret.DisplayObject
     private nowStepRepeatNum:number = 0;
 
     private round2StepNum:number = 4;
-    private round3StepNum:number = 16;
+    private round3StepNum:number = 14;
 
     private lastRadom:number;
 

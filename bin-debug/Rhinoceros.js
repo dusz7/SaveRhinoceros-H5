@@ -8,9 +8,9 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var Rhinoceros = (function (_super) {
     __extends(Rhinoceros, _super);
-    //public isLeft:boolean;
     function Rhinoceros(textureName) {
         var _this = _super.call(this) || this;
+        _this.isTeaching = false;
         //初始化犀牛形象
         _this.bmp = GameUtil.createBitmapByName(textureName);
         //this.bmp.pixelHitTest = true;
@@ -47,13 +47,23 @@ var Rhinoceros = (function (_super) {
             if (bulletDamageNum == 0) {
                 this.addChild(this.hitAnestheticPerformance);
             }
-            egret.setTimeout(function () {
-                this.removeChild(this.hitBulletPerformance);
-                if (bulletDamageNum == 0) {
-                    this.removeChild(this.hitAnestheticPerformance);
-                }
-            }, this, 400);
-            this.dispatchEventWith("getHurt", false, { bloodNum: this.bloodNum, bulletDamage: bulletDamageNum });
+            if (!this.isTeaching) {
+                egret.setTimeout(function () {
+                    this.removeChild(this.hitBulletPerformance);
+                    if (bulletDamageNum == 0) {
+                        this.removeChild(this.hitAnestheticPerformance);
+                    }
+                }, this, 400);
+                this.dispatchEventWith("getHurt", false, { bloodNum: this.bloodNum, bulletDamage: bulletDamageNum });
+            }
+        }
+    };
+    Rhinoceros.prototype.removeHitPerformance = function () {
+        if (this.getChildIndex(this.hitBulletPerformance) != -1) {
+            this.removeChild(this.hitBulletPerformance);
+        }
+        if (this.getChildIndex(this.hitAnestheticPerformance) != -1) {
+            this.removeChild(this.hitAnestheticPerformance);
         }
     };
     /**
@@ -62,7 +72,9 @@ var Rhinoceros = (function (_super) {
     Rhinoceros.prototype.getTreat = function () {
         if (this.bloodNum < 3) {
             this.bloodNum++;
-            this.dispatchEventWith("getTreat", false, this.bloodNum);
+            if (!this.isTeaching) {
+                this.dispatchEventWith("getTreat", false, this.bloodNum);
+            }
         }
     };
     Rhinoceros.prototype.turn = function () {

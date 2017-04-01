@@ -34,6 +34,8 @@ class Main extends egret.DisplayObjectContainer {
      * Process interface loading
      */
     private loadingView: LoadingUI;
+    private teachingController:TeachingController;
+    private gameController:GameController;
 
     public constructor() {
         super();
@@ -75,17 +77,26 @@ class Main extends egret.DisplayObjectContainer {
             RES.removeEventListener(RES.ResourceEvent.GROUP_PROGRESS, this.onResourceProgress, this);
             console.log("myPreload completed!");
             RES.loadGroup("gameEnd");
-            var gameController:GameController = new GameController();
-            this.addChild(gameController);
+            
+            this.teachingController = new TeachingController();
+            this.teachingController.addEventListener("endTeaching",this.onTeachingComplete,this);
+            this.addChild(this.teachingController);
         }else if(event.groupName == "gameEnd"){
-            console.log("otherSteps completed!");
+            console.log("gameEnd completed!");
             RES.loadGroup("otherSteps");
         }else if(event.groupName == "otherSteps"){
-            console.log("gameEnd completed!");
+            console.log("otherSteps completed!");
             RES.removeEventListener(RES.ResourceEvent.GROUP_COMPLETE, this.onResourceLoadComplete, this);
             RES.removeEventListener(RES.ResourceEvent.GROUP_LOAD_ERROR, this.onResourceLoadError, this);
             RES.removeEventListener(RES.ResourceEvent.ITEM_LOAD_ERROR, this.onItemLoadError, this);
         }
+    }
+
+    private onTeachingComplete()
+    {
+        this.removeChild(this.teachingController);
+        this.gameController = new GameController();
+        this.addChild(this.gameController);
     }
 
     /**
@@ -116,9 +127,7 @@ class Main extends egret.DisplayObjectContainer {
         if (event.groupName == "myPreload") {
             this.loadingView.setProgress(event.itemsLoaded, event.itemsTotal);
         }
-    }
-
-    
+    }    
 }
 
 

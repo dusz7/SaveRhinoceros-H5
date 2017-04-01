@@ -8,9 +8,11 @@ class Rhinoceros extends egret.DisplayObjectContainer
     public bloodNum;
     //public isLeft:boolean;
 
+    public isTeaching:boolean
+
     public constructor(textureName:string){
         super();
-
+        this.isTeaching = false;
         //初始化犀牛形象
         this.bmp = GameUtil.createBitmapByName(textureName);
         //this.bmp.pixelHitTest = true;
@@ -55,14 +57,29 @@ class Rhinoceros extends egret.DisplayObjectContainer
             {
                 this.addChild(this.hitAnestheticPerformance);
             }
-            egret.setTimeout(function() {
-                this.removeChild(this.hitBulletPerformance);
-                if(bulletDamageNum == 0)
-                {
-                    this.removeChild(this.hitAnestheticPerformance);
-                }
-            }, this, 400);
-            this.dispatchEventWith("getHurt",false,{bloodNum:this.bloodNum,bulletDamage:bulletDamageNum});
+            if(!this.isTeaching){
+                egret.setTimeout(function() {
+                    this.removeChild(this.hitBulletPerformance);
+                    if(bulletDamageNum == 0)
+                    {
+                        this.removeChild(this.hitAnestheticPerformance);
+                    }
+                }, this, 400);
+                this.dispatchEventWith("getHurt",false,{bloodNum:this.bloodNum,bulletDamage:bulletDamageNum});
+            }
+            
+        }
+    }
+
+    public removeHitPerformance()
+    {
+        if(this.getChildIndex(this.hitBulletPerformance) != -1)
+        {
+            this.removeChild(this.hitBulletPerformance);
+        }
+        if(this.getChildIndex(this.hitAnestheticPerformance) != -1)
+        {
+            this.removeChild(this.hitAnestheticPerformance);
         }
     }
 
@@ -74,7 +91,10 @@ class Rhinoceros extends egret.DisplayObjectContainer
         if(this.bloodNum < 3)
         {
             this.bloodNum ++;
-            this.dispatchEventWith("getTreat",false,this.bloodNum);
+            if(!this.isTeaching)
+            {
+                this.dispatchEventWith("getTreat",false,this.bloodNum);
+            }
         }
     }
 

@@ -129,6 +129,7 @@ class GameController extends egret.DisplayObjectContainer
         if(roundNum == 1){  //当为Round1时，开始首次游戏场景
             egret.setTimeout(function(){
                 this.removeChild(this.roundShowCen);
+                //this.topColumn.updateRoundNum(1);
                 this.gameStart();
             },this,3*this.pauseTimeOut);
         }
@@ -246,7 +247,6 @@ class GameController extends egret.DisplayObjectContainer
             this.thePointsList.push(newPoint);  //将新建枪支添加到列表中
         }
 
-
         //添加游戏帧检测监听器
         this.addEventListener(egret.Event.ENTER_FRAME,this.gameAllTest,this);
 
@@ -261,6 +261,11 @@ class GameController extends egret.DisplayObjectContainer
     public gameStop():void{
         
         //移除各项监听事件，删除所有对象
+        if(this.getChildIndex(this.theBloodProps) != -1)
+        {
+            this.removeChild(this.theBloodProps);
+        }
+
         this.rhinoceros.removeEventListener(egret.TouchEvent.TOUCH_BEGIN, this.mouseDown, this);    //移除犀牛的监听事件
         this.rhinoceros.removeEventListener(egret.TouchEvent.TOUCH_END, this.mouseUp, this);
         this.rhinoceros.removeEventListener("getHurt",this.getHurtHandler,this);
@@ -320,14 +325,14 @@ class GameController extends egret.DisplayObjectContainer
 
         //设置分数显示文字
         this.resultScoreText = new egret.TextField();
-        this.resultScoreText.width = 170;
+        this.resultScoreText.width = 230;
         this.resultScoreText.height = 130;
         this.resultScoreText.text = this.passNum.toString();
         this.resultScoreText.textAlign = "center"; 
         this.resultScoreText.bold = true;
         this.resultScoreText.size = 110;
         this.resultScoreText.textColor = 0xd5221e;
-        this.resultScoreText.x = 1175;
+        this.resultScoreText.x = 1140;
         this.resultScoreText.y = 610;
         this.addChild(this.resultScoreText);
 
@@ -376,10 +381,6 @@ class GameController extends egret.DisplayObjectContainer
     {
         window.open("https://mp.weixin.qq.com/s/Qnk0GObwzurtnxKAaqRw2A");
     }
-
-    /**
-     * 以下为各种自定义事件监听
-     */
 
     /**
      * 游戏碰撞检测、子弹出界检测以及子弹击中的结果
@@ -433,16 +434,6 @@ class GameController extends egret.DisplayObjectContainer
             
         }
 
-/*
-        //打中的子弹需要消失、回收
-        for(i=0; i<hitDelBullets.length; i++) {
-            theBullet = hitDelBullets[i];
-            egret.Tween.removeTweens(theBullet);
-            this.removeChild(theBullet);
-            this.theBulletsList.splice(this.theBulletsList.indexOf(theBullet),1);
-            Bullet.reclaim(theBullet);
-        }
-*/
         //出界的子弹需要消失、回收，更新分数
         for(i=0; i<outDelBullets.length; i++) 
         {
@@ -483,13 +474,11 @@ class GameController extends egret.DisplayObjectContainer
         this.theBulletsList.push(newBullet);
 
         //设置子弹运动动画
-        //var newX:number = newBullet.x+(this.stageH/(Math.tan(Math.abs(newBullet.fireAngle))));
         let fireDistance:number = this.stageH/(Math.sin(Math.abs(newBullet.fireAngle)/180*Math.PI));
         let fireSpeedTime:number = evt.data.speedTime/(Math.sin(Math.abs(newBullet.fireAngle)/180*Math.PI));
         egret.Tween.get(newBullet)
         .to({x:newBullet.x+fireDistance*(Math.cos(newBullet.fireAngle/180*Math.PI)),y:newBullet.y+fireDistance*(Math.sin(newBullet.fireAngle/180*Math.PI))},fireSpeedTime)
         ;
-        //.call(this.onBulletMoveCompleted,this,[newBullet]);
         
     }
 
@@ -513,21 +502,6 @@ class GameController extends egret.DisplayObjectContainer
             }
         },this,2000);
     }
-
-    /**
-     * 子弹移动结束后
-     */
-    /*
-    public onBulletMoveCompleted(theBullet:Bullet)
-    {
-        egret.Tween.removeTweens(theBullet);
-        this.removeChild(theBullet);
-        this.theBulletsList.splice(this.theBulletsList.indexOf(theBullet),1);
-        Bullet.reclaim(theBullet);
-        this.passNum ++;
-        //console.log("the bullet is at: "+theBullet.x+","+theBullet.y);
-    }
-    */
 
     /**
      * 掉血时的场景变化
@@ -560,18 +534,11 @@ class GameController extends egret.DisplayObjectContainer
             //设置延时，时间到后恢复场景
             egret.setTimeout(function()
             {
-                /*
-                if(bulletDamage > 0)
-                {
-                    this.topColumn.removeBloodNote();
-                }
-                */
                 
                 for(i=0;i<this.theBulletsList.length;i++)
                 {
                     egret.Tween.resumeTweens(this.theBulletsList[i]);
                 }
-                //this.rhinoceros.touchEnabled = true;
 
                 //被麻醉针打中以后，应该麻痹1秒钟
                 if(bulletDamage == 0)
@@ -611,19 +578,6 @@ class GameController extends egret.DisplayObjectContainer
     {
         if( this._touchStatus && this.rhinoceros.touchEnabled)
         {
-            /*
-            if(this._distance.x < 0 && !(this.rhinoceros.isLeft)){
-                //console.log("left");
-                //this.rhinoceros.scaleX = -1;
-                this.rhinoceros.isLeft = true;
-                console.log(this.rhinoceros.isLeft);
-            }else if(this._distance.x > 0 && this.rhinoceros.isLeft){
-                //console.log("right");
-                //this.rhinoceros.bmp.scaleX = -1;
-                this.rhinoceros.isLeft = false;
-                console.log(this.rhinoceros.isLeft);
-            }
-            */
             if(evt.stageX<this.stageW-150 && evt.stageX >100 && evt.stageY > 150 && evt.stageY < this.stageH-150)
             {
                 this.rhinoceros.x = evt.stageX - this._distance.x;
@@ -634,7 +588,6 @@ class GameController extends egret.DisplayObjectContainer
 
     private mouseDown(evt:egret.TouchEvent)
     {
-        //console.log("Mouse Down.");
         this._touchStatus = true;
         this._distance.x = evt.stageX - this.rhinoceros.x;
         this._distance.y = evt.stageY - this.rhinoceros.y;
@@ -643,7 +596,6 @@ class GameController extends egret.DisplayObjectContainer
 
     private mouseUp(evt:egret.TouchEvent)
     {
-        //console.log("Mouse Up.");
         this._touchStatus = false;
         this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.objectMove, this);
     }
