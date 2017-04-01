@@ -312,9 +312,6 @@ var GameController = (function (_super) {
         window.open("https://mp.weixin.qq.com/s/Qnk0GObwzurtnxKAaqRw2A");
     };
     /**
-     * 以下为各种自定义事件监听
-     */
-    /**
      * 游戏碰撞检测、子弹出界检测以及子弹击中的结果
      */
     GameController.prototype.gameAllTest = function (evt) {
@@ -387,12 +384,10 @@ var GameController = (function (_super) {
         this.addChildAt(newBullet, this.numChildren - 2);
         this.theBulletsList.push(newBullet);
         //设置子弹运动动画
-        //var newX:number = newBullet.x+(this.stageH/(Math.tan(Math.abs(newBullet.fireAngle))));
         var fireDistance = this.stageH / (Math.sin(Math.abs(newBullet.fireAngle) / 180 * Math.PI));
         var fireSpeedTime = evt.data.speedTime / (Math.sin(Math.abs(newBullet.fireAngle) / 180 * Math.PI));
         egret.Tween.get(newBullet)
             .to({ x: newBullet.x + fireDistance * (Math.cos(newBullet.fireAngle / 180 * Math.PI)), y: newBullet.y + fireDistance * (Math.sin(newBullet.fireAngle / 180 * Math.PI)) }, fireSpeedTime);
-        //.call(this.onBulletMoveCompleted,this,[newBullet]);
     };
     /**
      * 创建道具
@@ -410,20 +405,6 @@ var GameController = (function (_super) {
             }
         }, this, 2000);
     };
-    /**
-     * 子弹移动结束后
-     */
-    /*
-    public onBulletMoveCompleted(theBullet:Bullet)
-    {
-        egret.Tween.removeTweens(theBullet);
-        this.removeChild(theBullet);
-        this.theBulletsList.splice(this.theBulletsList.indexOf(theBullet),1);
-        Bullet.reclaim(theBullet);
-        this.passNum ++;
-        //console.log("the bullet is at: "+theBullet.x+","+theBullet.y);
-    }
-    */
     /**
      * 掉血时的场景变化
      */
@@ -448,16 +429,9 @@ var GameController = (function (_super) {
             this.topColumn.updateBlood(bloodNum);
             //设置延时，时间到后恢复场景
             egret.setTimeout(function () {
-                /*
-                if(bulletDamage > 0)
-                {
-                    this.topColumn.removeBloodNote();
-                }
-                */
                 for (i = 0; i < this.theBulletsList.length; i++) {
                     egret.Tween.resumeTweens(this.theBulletsList[i]);
                 }
-                //this.rhinoceros.touchEnabled = true;
                 //被麻醉针打中以后，应该麻痹1秒钟
                 if (bulletDamage == 0) {
                     //使得犀牛不能动   
@@ -486,19 +460,6 @@ var GameController = (function (_super) {
      */
     GameController.prototype.objectMove = function (evt) {
         if (this._touchStatus && this.rhinoceros.touchEnabled) {
-            /*
-            if(this._distance.x < 0 && !(this.rhinoceros.isLeft)){
-                //console.log("left");
-                //this.rhinoceros.scaleX = -1;
-                this.rhinoceros.isLeft = true;
-                console.log(this.rhinoceros.isLeft);
-            }else if(this._distance.x > 0 && this.rhinoceros.isLeft){
-                //console.log("right");
-                //this.rhinoceros.bmp.scaleX = -1;
-                this.rhinoceros.isLeft = false;
-                console.log(this.rhinoceros.isLeft);
-            }
-            */
             if (evt.stageX < this.stageW - 150 && evt.stageX > 100 && evt.stageY > 150 && evt.stageY < this.stageH - 150) {
                 this.rhinoceros.x = evt.stageX - this._distance.x;
                 this.rhinoceros.y = evt.stageY - this._distance.y;
@@ -506,14 +467,12 @@ var GameController = (function (_super) {
         }
     };
     GameController.prototype.mouseDown = function (evt) {
-        //console.log("Mouse Down.");
         this._touchStatus = true;
         this._distance.x = evt.stageX - this.rhinoceros.x;
         this._distance.y = evt.stageY - this.rhinoceros.y;
         this.stage.addEventListener(egret.TouchEvent.TOUCH_MOVE, this.objectMove, this);
     };
     GameController.prototype.mouseUp = function (evt) {
-        //console.log("Mouse Up.");
         this._touchStatus = false;
         this.stage.removeEventListener(egret.TouchEvent.TOUCH_MOVE, this.objectMove, this);
     };

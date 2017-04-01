@@ -162,7 +162,7 @@ var TeachingController = (function (_super) {
         var moveDistance = this._touchUpX - this._touchDownX;
         this._touchDownX = 0;
         this._touchUpX = this.stage.stageWidth;
-        if (moveDistance < -(0.15 * this.stage.$stageWidth)) {
+        if (moveDistance < -(0.1 * this.stage.$stageWidth)) {
             if (this.nowStepNo < 5) {
                 this.nowStepNo++;
                 this.showStep(this.nowStepNo);
@@ -171,7 +171,7 @@ var TeachingController = (function (_super) {
                 this.endTeaching();
             }
         }
-        else if (moveDistance > (0.15 * this.stage.$stageWidth)) {
+        else if (moveDistance > (0.1 * this.stage.$stageWidth)) {
             if (this.nowStepNo > 1) {
                 this.nowStepNo--;
                 this.showStep(this.nowStepNo);
